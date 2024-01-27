@@ -1,0 +1,112 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="{% static 'remoteController/js/config.js' %}" defer></script>
+    <script src="{% static 'remoteController/js/manipulation.js' %}" defer></script>
+    <script src="{% static 'remoteController/js/miscelanous.js' %}" defer></script>
+    <script src="{% static 'remoteController/js/navigation.js' %}" defer></script>
+    <script src="{% static 'remoteController/js/perception.js' %}" defer></script>
+    <script src="{% static 'remoteController/js/speech.js' %}" defer></script>
+    <script src="{% static 'remoteController/js/joystick.js' %}" defer></script>
+    <link rel="stylesheet" href="{% static 'remoteController/css/styles.css'%}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <title>Sinfonia Remote Controller</title>
+</head>
+<body onmouseup="stop()" ontouchend="stop()">
+    <p id="showVo">Volumen:</p>
+    <input id="volume" type="range" min="0" max="100" value="50"><br><br>
+    <button id='cVolumen' onclick="setVolume()">Cambiar Volumen</button><br><br>
+    <p>Controla a Pepper!</p>
+    <p>Decir:</p>
+    <form id="empty" action="speak/" method="GET">
+        <select name="language" id="lenguaje">
+            <option value="Spanish">Español</option>
+            <option value="English">Ingles</option>
+        </select>
+        <input id='palabras' type="text" name="words">
+    </form>
+    <button id='say' onclick="speak()" value="Hablar">Hablar</button>
+    <p>Controles tactiles:</p>
+    <p id="showSp">Velocidad:</p>
+    <input id="speed" type="range" min="25" max="50" value="30"><br><br>
+    <div id="D-Pad">
+        <button id='up' ontouchstart="move('up')" otnouchend="stop()" onmousedown="move('up')" onmouseup="stop()" onclick="tapMove('up')" value="up"><img class="flecha" src="{% static 'remoteController/img/Flecha.png' %}" width = "64" height = "64" /></button><br>
+
+        <button id='left' ontouchstart="move('left')" ontouchend="stop()" onmousedown="move('left')" onmouseup="stop()" onclick="tapMove('left')" value="left"><img class="flecha" src="{% static 'remoteController/img/Flecha.png' %}" width = "64" height = "64" /></button>
+
+        <button id='right' ontouchstart="move('right')" ontouchend="stop()" onmousedown="move('right')" onmouseup="stop()" onclick="tapMove('right')" value="Hablar"><img class="flecha" src="{% static 'remoteController/img/Flecha.png' %}" width = "64" height = "64" /></button><br>
+
+        <button id='down' ontouchstart="move('down')" ontouchend="stop()" onmousedown="move('down')" onmouseup="stop()" onclick="tapMove('down')" value="down"><img class="flecha" src="{% static 'remoteController/img/Flecha.png' %}" width = "64" height = "64" /></button><br>
+
+    </div>
+
+
+    <hr>
+    <div id="joystick">
+        <img src="{% static 'remoteController/img/joystick-base.png' %}"/>
+        <div id="stick">
+        <img src="{% static 'remoteController/img/joystick-red.png' %}"/>        
+        </div>
+    </div>
+
+    <br>
+
+    <button id='rotateR' ontouchstart="move('rotateR')" ontouchend="stop()" onmousedown="move('rotateR')" onmouseup="stop()" onclick="tapMove('rotateR')" value="Hablar">GirarD</button><br>
+
+    <button id='rotateL' ontouchstart="move('rotateL')" ontouchend="stop()" onmousedown="move('rotateL')" onmouseup="stop()" onclick="tapMove('rotateL')" value="Hablar">GirarI</button><br>
+
+    <p>Aqui se ven las camaras lanzando el web video server</p>
+    <img id="front_camera" width="300" height="200"/>
+    <img id="bottom_camera" width="300" height="200"/>
+
+    <p>Poner imagen</p>
+    <input id='urlImagen' type="text" name="url">
+    <button id='setImage' onclick="display()" value="image">Poner imagen</button>
+    
+    <p>Poner Pagina Web</p>
+    <input id='urlWeb' type="text" name="urlW">
+    <button id='setWeb' onclick="displayWeb()" value="image">Poner pagina web</button>
+
+    <p>Hacer animacion</p>
+    <p>Grupo:</p>
+    <select name="animGroup" id="group" onchange="listarCategorias()" onfocus="this.selectedIndex =-1;">
+        <option value="" selected>Elegir un grupo</option>
+    </select>
+
+    <p>Categoria:</p>
+    <select name="animCat" id="aCat" onchange="listarNombres()" onfocus="this.selectedIndex =-1;">
+        <option value="" selected>Elegir una categoria</option>
+    </select><br><br>
+
+    <p>Nombre:</p>
+    <select name="animName" id="aName" onfocus="this.selectedIndex =-1;">
+        <option value="" selected>Elegir un Nombre</option>
+    </select><br><br>
+    <button id="animate" onclick="animation()" value="animate">Ejecutar animacion</button>
+    <button id="standard" onclick="standard()" value="animate">Posicion estandar</button>
+
+
+    <p>Color de los leds</p>
+    <input id="leds" type="color"/><br><br>
+    <button id="setLeds" onclick="setLeds()">Cambiar color</button>
+
+    <div
+      id="drop_zone"
+      ondrop="dropHandler(event);"
+      ondragover="dragOverHandler(event);">
+      <input type="file" id="imagenT" accept="image/png, image/jpeg" />
+      <p>Drag one or more files to this <i>drop zone</i>.</p>
+    </div>
+    <button id='display' onclick="display2()" value="display">Mostrar imagen</button><br>
+    <img id="preview">
+    <p id="battery">Bateria: ?%</p>
+    <button id='delImgs' onclick="delImgs()" value="delImgs">Borrar Imagenes</button><br>
+    <button id='audio' onclick="changeAudio()" value="delImgs">Detener Transmision de Audio</button><br>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+
+</body>
+</html>
