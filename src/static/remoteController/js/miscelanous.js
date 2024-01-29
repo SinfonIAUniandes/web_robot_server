@@ -89,7 +89,7 @@ function setLeds(){
 
 getBattery();
 
-setInterval(getBattery,60000);
+setInterval(getBattery,10000);
 
 function getBattery()
 {
@@ -99,7 +99,38 @@ function getBattery()
     if (peticion.readyState === 4) {
         var response = peticion.response;
         bateria = document.getElementById("battery");
-        bateria.innerHTML = "Bateria: "+response+"%";
+        bateria.innerHTML = response+"%";
+        bateImagen = document.getElementById("rellenar");
+        if (response >80)
+        {
+            bateImagen.style.backgroundColor= 'limegreen';
+            bateImagen.style.height= "32%";
+            bateImagen.style.top= "15px";
+        }
+        else if (response >60)
+        {
+            bateImagen.style.backgroundColor= 'limegreen';
+            bateImagen.style.height= "24%";
+            bateImagen.style.top= "19px";
+        }
+        else if (response >40)
+        {
+            bateImagen.style.backgroundColor= 'limegreen';
+            bateImagen.style.height= "16%";
+            bateImagen.style.top= "23px";
+        }
+        else if (response >20)
+        {
+            bateImagen.style.backgroundColor= 'limegreen';
+            bateImagen.style.height= "8%";
+            bateImagen.style.top= "27px";
+        }
+        else if (response <20)
+        {
+            bateImagen.style.backgroundColor= 'red';
+            bateImagen.style.top= "27px";
+        }
+        console.log(response);
     }};
     peticion.send();
 }

@@ -32,26 +32,27 @@ class RemoteC:
     def __init__(self):
 
         #ROS Publishers
-        self.speechPublisher = rospy.Publisher('/speech',speech_msg,queue_size=10)
-        self.movePublisher = rospy.Publisher('/cmd_vel',Twist,queue_size=10)
-        self.headPublisher = rospy.Publisher('/set_angles',set_angles_msg,queue_size=10)
-        self.animationPublisher = rospy.Publisher('/animations',animation_msg,queue_size=10)
-        self.ledsPublisher = rospy.Publisher('/leds',leds_parameters_msg,queue_size=10)
+        #self.speechPublisher = rospy.Publisher('/speech',speech_msg,queue_size=10)
+        #self.movePublisher = rospy.Publisher('/cmd_vel',Twist,queue_size=10)
+        #self.headPublisher = rospy.Publisher('/set_angles',set_angles_msg,queue_size=10)
+        #self.animationPublisher = rospy.Publisher('/animations',animation_msg,queue_size=10)
+        #self.ledsPublisher = rospy.Publisher('/leds',leds_parameters_msg,queue_size=10)
 
         #ROS Subscribers
         #Suscriber for the robot microphone to get audio
-        self.micSubscriber=rospy.Subscriber("/mic", AudioBuffer, self.audioCallbackSingleChannel)
+        #self.micSubscriber=rospy.Subscriber("/mic", AudioBuffer, self.audioCallbackSingleChannel)
 
         #Constants
         self.audioBuffer = ""
         self.ended = False
+        self.bateria = 100
 
         #Toolkit messages to turn on robot funcionality
-        sSpeech.startSpeechMessage()
-        sMisc.startMiscMessage()
-        sManipulation.startManipulationMessage()
-        sPerception.startPerceptionMessage()
-        sNavigation.startNavigationMessage()
+        #sSpeech.startSpeechMessage()
+        #sMisc.startMiscMessage()
+        #sManipulation.startManipulationMessage()
+        #sPerception.startPerceptionMessage()
+        #sNavigation.startNavigationMessage()
 
     def audioCallbackSingleChannel(self,data):
         """
@@ -72,6 +73,7 @@ class RemoteC:
                 yield self.gen_message(self.audioBuffer)
                 self.audioBuffer = ""
                 self.ended = False
+
 
 remote = RemoteC()
 
@@ -131,8 +133,12 @@ def setVolume(request):
     return HttpResponse(status=204)
 
 def getBattery(request):
-    bateria = sMisc.batteryService()
-    return HttpResponse(bateria)
+    #bateria = sMisc.batteryService()
+    if remote.bateria!=0:
+        remote.bateria -=20
+    else:
+        remote.bateria= 100
+    return HttpResponse(str(remote.bateria))
 
 def getAudio(request):
     """

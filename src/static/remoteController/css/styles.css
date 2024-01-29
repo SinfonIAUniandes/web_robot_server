@@ -1,43 +1,73 @@
 #drop_zone 
 {
   border: 5px solid blue;
-  width: 1000px;
-  height: 1000px;
+  width: 500px;
+  height: 200px;
+  border-radius: 8px;
 }
-
 #D-Pad 
 {
   border: 5px solid black;
   display: inline-block;
   background-color: gray;
+  border-radius: 20px;
+}
+
+#rotateL
+{
+  margin-left: 20px;
+  margin-bottom: 10px;
+  padding: 5px 5px !important;
+  background-color: white !important;
+  border: none !important;
+}
+
+#rotateR
+{
+  transform: scale(-1, 1);
+  margin-left: 5px;
+  margin-bottom: 10px;
+  padding: 5px 5px !important;
+  background-color: white !important;
+  border: none !important;
 }
 
 #up
 {
   transform:rotate(0deg);
-  margin-left: 76px;
   margin-bottom: 10px;
+  margin-top:15px;
+  margin-left: 5px;
+  padding: 5px 5px !important;
+  background-color: white !important;
 }
 
 #left
 {
   transform:rotate(270deg);
-  margin-left: 0px;
+  margin-left: 20px;
   margin-bottom: 10px;
+  padding: 5px 5px !important;
+  background-color: white !important;
 }
 
 #right
 {
   transform:rotate(90deg);
-  margin-left: 74px;
+  margin-left: 88px;
+  margin-right: 20px;
   margin-bottom: 10px;
+  padding: 5px 5px !important;
+  background-color: white !important;
 }
 
 #down
 {
   transform:rotate(180deg);
-  margin-left: 76px;
-  margin-bottom: 0px;
+  margin-left: 103px;
+  margin-bottom: 15px;
+  padding: 5px 5px !important;
+  background-color: white !important;
 }
 
 .flecha
@@ -45,6 +75,7 @@
   user-select: none;
   touch-action: none;
   pointer-events: none;
+  border: none !important;
 }
 
 #joystick
@@ -58,4 +89,154 @@
   position: absolute;
   left:32px;
   top:32px;
+}
+
+#body {
+    font-family: 'Arial', sans-serif;
+    background-color: #202020;
+    color: white; 
+    line-height: 1.6;
+    font-size:15px;
+}
+
+#imagenT
+{
+    font-size:15px;
+    margin-left: 10px;
+}
+
+#imagenT::file-selector-button {
+  margin-right: 20px;
+  border: none;
+  background: #084cdf;
+  padding: 10px 20px;
+  border-radius: 10px;
+  color: #fff;
+  cursor: pointer;
+  transition: background .2s ease-in-out;
+}
+
+#imagenT::file-selector-button:hover {
+  background: #0d45a5;
+}
+
+#textoArrastrar
+{
+    font-size:15px;
+    margin-left: 10px;
+}
+
+/* Estilos para los botones */
+button {
+    background-color: #084cdf; /* Cambiar el color de fondo del botón según tus preferencias */
+    color: #fff; /* Cambiar el color del texto del botón según tus preferencias */
+    padding: 15px 30px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+/* Estilos para los botones */
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  width: 15rem;
+}
+
+.slider::-webkit-slider-runnable-track {
+  background: #084cdf;
+  height: 0.5rem;
+}
+
+.slider::-moz-range-track {
+  background: #084cdf;
+  height: 0.5rem;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+   -webkit-appearance: none; /* Override default look */
+   appearance: none;
+   background-color: white;
+   height: 1rem;
+   width: 1rem;    
+}
+
+input[type="range"]::-moz-range-thumb {
+    border: none; /*Removes extra border that FF applies*/
+    background-color: white;
+    height: 1rem;
+    width: 1rem;
+}
+
+button:hover {
+    background-color: #0d45a5; /* Cambiar el color de fondo del botón al pasar el ratón según tus preferencias */
+}
+
+/* Estilos para los formularios */
+form {
+    margin-bottom: 20px;
+}
+
+/* Estilos para las imágenes */
+img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ddd; /* Añadir un borde a las imágenes si lo deseas */
+    border-radius: 5px; /* Añadir esquinas redondeadas a las imágenes si lo deseas */
+}
+
+
+/* Estilos para los selectores */
+select {
+    padding: 8px;
+    margin: 5px 0;
+}
+
+/* Estilos para los input de tipo texto y color */
+input[type="text"],
+input[type="color"] {
+    padding: 8px;
+    margin: 5px 0;
+}
+
+#navbar{
+    height: 50px;
+    position: relative;
+    border: 1px solid #ddd; /* Añadir un borde a las imágenes si lo deseas */
+}
+
+#bPorcentaje
+{
+  margin-left: 5px;
+  margin-right: 5px;
+  background-color: white !important;
+  transform:rotate(270deg);
+}
+
+#rellenar{
+   float: left;
+   position: absolute;
+   left: 18px;
+   top: 27px;
+   z-index: 1000;
+   background-color: red;
+   padding: 5px;
+   width:3px;
+   height: 8%;
+}
+
+#bateDiv
+{
+    border: 1px solid #ddd !important;
+    width: max-content;
+    height: 50px;
+    display: flex;
+    align-items: center;
+}
+
+#battery {
+  margin-left: 5px;
+  margin-right: 5px;
 }

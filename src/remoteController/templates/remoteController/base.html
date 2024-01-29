@@ -13,12 +13,19 @@
     <script src="{% static 'remoteController/js/speech.js' %}" defer></script>
     <script src="{% static 'remoteController/js/joystick.js' %}" defer></script>
     <link rel="stylesheet" href="{% static 'remoteController/css/styles.css'%}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <title>Sinfonia Remote Controller</title>
 </head>
-<body onmouseup="stop()" ontouchend="stop()">
+<body id="body"onmouseup="stop()" ontouchend="stop()">
+    <nav id ="navbar">
+        <div  id="bateDiv">
+            <div id="rellenar">
+            </div>
+            <img id="bPorcentaje" src="{% static 'remoteController/img/battery.png' %}" width ="35" height="35">
+            <span id="battery">?%</span>
+        </div>
+    </nav>
     <p id="showVo">Volumen:</p>
-    <input id="volume" type="range" min="0" max="100" value="50"><br><br>
+    <input class="slider" id="volume" type="range" min="0" max="100" value="50"><br><br>
     <button id='cVolumen' onclick="setVolume()">Cambiar Volumen</button><br><br>
     <p>Controla a Pepper!</p>
     <p>Decir:</p>
@@ -32,9 +39,13 @@
     <button id='say' onclick="speak()" value="Hablar">Hablar</button>
     <p>Controles tactiles:</p>
     <p id="showSp">Velocidad:</p>
-    <input id="speed" type="range" min="25" max="50" value="30"><br><br>
+    <input class="slider" id="speed" type="range" min="25" max="50" value="30"><br><br>
     <div id="D-Pad">
-        <button id='up' ontouchstart="move('up')" otnouchend="stop()" onmousedown="move('up')" onmouseup="stop()" onclick="tapMove('up')" value="up"><img class="flecha" src="{% static 'remoteController/img/Flecha.png' %}" width = "64" height = "64" /></button><br>
+        <button id='rotateL' ontouchstart="move('rotateL')" ontouchend="stop()" onmousedown="move('rotateL')" onmouseup="stop()" onclick="tapMove('rotateL')" value="Hablar"><img class="flecha" src="{% static 'remoteController/img/rotar.png' %}" width = "64" height = "64" /></button>
+
+        <button id='up' ontouchstart="move('up')" otnouchend="stop()" onmousedown="move('up')" onmouseup="stop()" onclick="tapMove('up')" value="up"><img class="flecha" src="{% static 'remoteController/img/Flecha.png' %}" width = "64" height = "64" /></button>
+
+        <button id='rotateR' ontouchstart="move('rotateR')" ontouchend="stop()" onmousedown="move('rotateR')" onmouseup="stop()" onclick="tapMove('rotateR')" value="Hablar"><img class="flecha" src="{% static 'remoteController/img/rotar.png' %}" width = "64" height = "64" /></button><br>
 
         <button id='left' ontouchstart="move('left')" ontouchend="stop()" onmousedown="move('left')" onmouseup="stop()" onclick="tapMove('left')" value="left"><img class="flecha" src="{% static 'remoteController/img/Flecha.png' %}" width = "64" height = "64" /></button>
 
@@ -45,7 +56,7 @@
     </div>
 
 
-    <hr>
+    <br>
     <div id="joystick">
         <img src="{% static 'remoteController/img/joystick-base.png' %}"/>
         <div id="stick">
@@ -55,9 +66,6 @@
 
     <br>
 
-    <button id='rotateR' ontouchstart="move('rotateR')" ontouchend="stop()" onmousedown="move('rotateR')" onmouseup="stop()" onclick="tapMove('rotateR')" value="Hablar">GirarD</button><br>
-
-    <button id='rotateL' ontouchstart="move('rotateL')" ontouchend="stop()" onmousedown="move('rotateL')" onmouseup="stop()" onclick="tapMove('rotateL')" value="Hablar">GirarI</button><br>
 
     <p>Aqui se ven las camaras lanzando el web video server</p>
     <img id="front_camera" width="300" height="200"/>
@@ -93,20 +101,21 @@
     <p>Color de los leds</p>
     <input id="leds" type="color"/><br><br>
     <button id="setLeds" onclick="setLeds()">Cambiar color</button>
+    <br>
+    <br>
 
     <div
       id="drop_zone"
       ondrop="dropHandler(event);"
-      ondragover="dragOverHandler(event);">
+      ondragover="dragOverHandler(event);"><br>
       <input type="file" id="imagenT" accept="image/png, image/jpeg" />
-      <p>Drag one or more files to this <i>drop zone</i>.</p>
+      <p id="textoArrastrar" >Arrastra una imagen aqui </p>
     </div>
+    <br>
     <button id='display' onclick="display2()" value="display">Mostrar imagen</button><br>
-    <img id="preview">
-    <p id="battery">Bateria: ?%</p>
-    <button id='delImgs' onclick="delImgs()" value="delImgs">Borrar Imagenes</button><br>
+    <button id='delImgs' onclick="delImgs()" value="delImgs">Borrar Imagenes</button>
+    <br>
+    <br>
     <button id='audio' onclick="changeAudio()" value="delImgs">Detener Transmision de Audio</button><br>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-
 </body>
 </html>
