@@ -19,6 +19,7 @@ export const useBattery = () => {
   const batteryLevel = ref(100);
   const loading = ref(true);
 
+  getBattery(batteryLevel, loading);
   useInterval(() => getBattery(batteryLevel, loading), 60000);
 
   return { batteryLevel, loading };
