@@ -17,7 +17,7 @@ To work with the web robot server you need the next packages in your src:
 To download robot_toolkit_msgs and web_robot_server:
 First, browse to your src folder
 
-    cd manipulation_ws/src
+    cd interface_ws/src
 To download robot_toolkit_msgs and web_robot_server:
 
     git clone https://github.com/SinfonIAUniandes/robot_toolkit_msgs.git
