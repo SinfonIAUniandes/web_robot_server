@@ -17,16 +17,6 @@ import rospy
 import time
 import os
 import shutil
-from sounddevice import InputStream
-import sounddevice as sd
-import wave
-import soundfile as sf
-import shlex
-from psutil import Popen
-import numpy as np
-import threading
-import subprocess
-
 
 class RemoteC:
     def __init__(self):
@@ -129,8 +119,12 @@ def setLeds(request):
     return HttpResponse(status=204)
 
 def setVolume(request):
-    sSpeech.volumeService(int(request.GET["volume"]))
+    sSpeech.setVolumeService(int(request.GET["volume"]))
     return HttpResponse(status=204)
+
+def getVolume(request):
+    volume = sSpeech.getVolumeService()
+    return HttpResponse(volume)
 
 def getBattery(request):
     #bateria = sMisc.batteryService()
@@ -139,6 +133,7 @@ def getBattery(request):
     else:
         remote.bateria= 100
     return HttpResponse(str(remote.bateria))
+    #return HttpResponse(str(bateria))
 
 def getAudio(request):
     """

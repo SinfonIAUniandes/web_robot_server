@@ -12,6 +12,7 @@ urlpatterns = [
     url("animate/",views.animate, name="animate"),
     url("setLeds/",views.setLeds, name="setLeds"),
     url("setVolume/",views.setVolume, name="setVolume"),
+    url("getVolume/",views.getVolume, name="getVolume"),
     url("getBattery/",views.getBattery, name="getBattery"),
     url("getAudio/",views.getAudio, name="getAudio"),
     url("delImgs/",views.delImgs, name="delImgs"),

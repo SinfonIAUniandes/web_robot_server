@@ -1,6 +1,6 @@
 import rospy
 from robot_toolkit_msgs.msg import audio_tools_msg, speech_msg
-from robot_toolkit_msgs.srv import audio_tools_srv, set_output_volume_srv
+from robot_toolkit_msgs.srv import audio_tools_srv, set_output_volume_srv, battery_service_srv
 
 def startSpeechMessage():
     #Service speech call
@@ -51,7 +51,7 @@ def genMsg(language, text):
     t2s_msg.animated = True
     return t2s_msg
 
-def volumeService(volume):
+def setVolumeService(volume):
     """
     Changes the volume of the robots output
     """
@@ -61,5 +61,20 @@ def volumeService(volume):
         volumeS = rospy.ServiceProxy('/pytoolkit/ALAudioDevice/set_output_volume_srv', set_output_volume_srv)
         volumeService = volumeS(volume)
         print("Volume service connected!")
+    except rospy.ServiceException as e:
+        print("Service call failed")
+
+
+def getVolumeService():
+    """
+    Changes the volume of the robots output
+    """
+    print("Waiting for volume tools service")
+    rospy.wait_for_service('/pytoolkit/ALAudioDevice/get_output_volume_srv')
+    try:
+        volumeS = rospy.ServiceProxy('/pytoolkit/ALAudioDevice/get_output_volume_srv', battery_service_srv)
+        volumeService = volumeS()
+        print("Volume service connected!")
+        return volumeService.porcentage
     except rospy.ServiceException as e:
         print("Service call failed")
