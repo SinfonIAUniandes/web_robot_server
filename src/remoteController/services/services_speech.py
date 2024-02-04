@@ -1,6 +1,7 @@
 import rospy
 from robot_toolkit_msgs.msg import audio_tools_msg, speech_msg
 from robot_toolkit_msgs.srv import audio_tools_srv, set_output_volume_srv
+from django.conf import settings
 
 def startSpeechMessage():
     #Service speech call
@@ -51,10 +52,12 @@ def genMsg(language, text):
     t2s_msg.animated = True
     return t2s_msg
 
-def volumeService(volume):
-    """
-    Changes the volume of the robots output
-    """
+
+def mockVolumeService(volume):
+    print("Volume set to "+str(volume))
+
+
+def rosVolumeService(volume):
     print("Waiting for volume tools service")
     rospy.wait_for_service('/pytoolkit/ALAudioDevice/set_output_volume_srv')
     try:
@@ -63,3 +66,13 @@ def volumeService(volume):
         print("Volume service connected!")
     except rospy.ServiceException as e:
         print("Service call failed")
+
+
+def volumeService(volume):
+    """
+    Changes the volume of the robots output
+    """
+    if settings.USE_PEPPER_ROBOT:
+        rosVolumeService(volume)
+    else:
+        mockVolumeService(volume)

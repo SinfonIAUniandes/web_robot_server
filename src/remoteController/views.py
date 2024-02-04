@@ -129,6 +129,10 @@ def set_leds(request):
 
 
 def set_volume(request):
+    """
+    :param request: HttpRequest object that contains the volume value in the GET parameters.
+    :return: HttpResponse with a status code of 204.
+    """
     s_speech.volumeService(int(request.GET["volume"]))
     return HttpResponse(status=204)
 
@@ -159,7 +163,12 @@ def get_audio(request):
 
 def delete_images(request):
     """
-    Borra las imagenes almacenadas en media para evitar sobrecargar el servidor
+    :delete_images:
+
+    Deletes all images from the media folder.
+
+    :param request: The HTTP request. This parameter is not used in the method.
+    :return: An HttpResponse with status code 204 indicating that the images have been successfully deleted.
     """
     folderImagenes = settings.MEDIA_ROOT + "/img/"
     for filename in os.listdir(folderImagenes):
