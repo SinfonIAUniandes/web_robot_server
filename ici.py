@@ -58,11 +58,13 @@ def restore_backup(folder):
 
 
 def move_files():
+    if not os.path.exists("./src/static/remoteController/front"):
+        os.system("mkdir ./src/static/remoteController/front")
     for f in os.listdir("./frontend/dist"):
         if f.endswith(".html"):
             os.system("cp ./frontend/dist/index.html ./src/remoteController/templates/remoteController/base.html")
         else:
-            os.system("cp -Rf ./frontend/dist/" + f + " ./src/static/remoteController/" + f)
+            os.system("cp -Rf ./frontend/dist/" + f + " ./src/static/remoteController/front/" + f)
 
 
 def main():

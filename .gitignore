@@ -40,3 +40,4 @@ backups/
 */pnpm-debug.log*
 */lerna-debug.log*
 
+/src/static/remoteController/front
