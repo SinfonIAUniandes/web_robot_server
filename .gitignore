@@ -3,3 +3,8 @@
 .idea/
 .vscode/
 
+# Python Compiled Files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
