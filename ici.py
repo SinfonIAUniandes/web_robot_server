@@ -13,11 +13,11 @@ def update_line(line):
     soup = BeautifulSoup(line, 'html.parser')
     script = soup.find("script", None)
     if script is not None:
-        script["src"] = "/static/remoteController" + script["src"]
+        script["src"] = "/static/remoteController/front" + script["src"]
         return script.prettify().replace("=\"\"", "")
     link = soup.find("link", None)
     if link is not None:
-        link["href"] = "/static/remoteController" + link["href"]
+        link["href"] = "/static/remoteController/front" + link["href"]
         return link.prettify().replace("=\"\"", "")
     return line
 
