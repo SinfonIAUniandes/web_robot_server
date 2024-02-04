@@ -38,7 +38,7 @@ The web robot server requires the following environment variables.
 ## Instructions
 The manual is available in the docs
 
-## GFM task list
+## Task list
 
 - [x] Test Django with Ros
 - [x] Build a functional backend server
