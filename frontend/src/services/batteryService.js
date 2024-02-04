@@ -1,7 +1,9 @@
-import { onMounted, onUnmounted, ref } from "vue";
+import { ref } from "vue";
+import { getBatteryUri } from "@/config/endpoints.js";
+import useInterval from "@/composables/useInterval.js";
 
 const getBattery = (batteryRef, loading) => {
-  fetch("http://192.168.0.210:8000/remoteController/getBattery/")
+  fetch(getBatteryUri)
     .then((res) => res.text())
     .then((res) => {
       batteryRef.value = parseInt(res);
@@ -16,16 +18,8 @@ const getBattery = (batteryRef, loading) => {
 export const useBattery = () => {
   const batteryLevel = ref(100);
   const loading = ref(true);
-  let interval;
 
-  onMounted(() => {
-    getBattery(batteryLevel, loading);
-    interval = setInterval(() => getBattery(batteryLevel, loading), 60000);
-  });
-
-  onUnmounted(() => {
-    clearInterval(interval);
-  });
+  useInterval(() => getBattery(batteryLevel, loading), 60000);
 
   return { batteryLevel, loading };
 };

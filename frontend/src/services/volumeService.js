@@ -1,8 +1,9 @@
 import { ref } from "vue";
 import axios from "axios";
+import { setVolumeUri } from "@/config/endpoints.js";
 
 const changeVolume = async (target) => {
-  await axios.get("http://192.168.0.210:8000/remoteController/setVolume/?volume=" + target);
+  await axios.get(`${setVolumeUri}?volume=${target}`);
 };
 
 export const useVolume = () => {

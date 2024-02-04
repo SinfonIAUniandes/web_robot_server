@@ -27,7 +27,7 @@ __pycache__/
 */dist-ssr
 */coverage
 *.local
-*.env
+*.development
 
 backups/
 
