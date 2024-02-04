@@ -1,9 +1,8 @@
 import { ref } from "vue";
-import axios from "axios";
 import { setVolumeUri } from "@/config/endpoints.js";
 
 const changeVolume = async (target) => {
-  await axios.get(`${setVolumeUri}?volume=${target}`);
+  await fetch(`${setVolumeUri}?volume=${target}`);
 };
 
 export const useVolume = () => {
