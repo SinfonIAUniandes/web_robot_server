@@ -48,7 +48,7 @@ def create_backup():
 
 
 def remove_old_files():
-    os.system("rm -Rf ./src/static/remoteController/assets/")
+    os.system("rm -Rf ./src/static/remoteController/front/")
     os.system("rm ./src/remoteController/templates/remoteController/base.html")
 
 
