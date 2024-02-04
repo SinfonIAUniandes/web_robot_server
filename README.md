@@ -1,132 +1,48 @@
+
 # Web Robot Server
 
 This package allows the hosting of a server that can run in or out of Pepper, this server currently offers a remote controller for the robot and in the future tablet controls.
 
-**Table of Contents**
-
-[TOC]
-
-#Create Workspace
+## Create Workspace
 
 ```bash
 mkdir interface_ws/src
 ```
+## Installation
+To work with the web robot server you need the next packages in your src:
 
-#Installation
+-   robot_toolkit_msgs
+-  web_robot_server
 
-#Environment Variables
+To download robot_toolkit_msgs and web_robot_server:
+First, browse to your src folder
 
-#Instructions
+    cd manipulation_ws/src
+To download robot_toolkit_msgs and web_robot_server:
 
-#Documentation
+    git clone https://github.com/SinfonIAUniandes/robot_toolkit_msgs.git
+    git clone https://github.com/SinfonIAUniandes/web_robot_server.git
 
-                
-----
+Then go back and build the workspace with catkin_make
 
-~~Strikethrough~~ <s>Strikethrough (when enable html tag decode.)</s>
-*Italic*      _Italic_
-**Emphasis**  __Emphasis__
-***Emphasis Italic*** ___Emphasis Italic___
+    cd ..
+    catkin_make
 
-Superscript: X<sub>2</sub>，Subscript: O<sup>2</sup>
+## Environment Variables
+The web robot server requires the following environment variables.
 
-**Abbreviation(link HTML abbr tag)**
+    export PEPPER_IP=$(PEPPER_IP)
+    export ROS_MASTER_URI=http://$PEPPER_IP:11311
+    export ROS_IP=$(ROS_IP)
 
-The <abbr title="Hyper Text Markup Language">HTML</abbr> specification is maintained by the <abbr title="World Wide Web Consortium">W3C</abbr>.
+## Instructions
+The manual is available in the docs
 
-###Links
+## GFM task list
 
-[Links](http://localhost/)
-
-[Links with title](http://localhost/ "link title")
-
-`<link>` : <https://github.com>
-
-[Reference link][id/name] 
-
-[id/name]: http://link-url/
-
-GFM a-tail link @pandao
-
-
-----
-
-###Lists
-
-####Unordered list (-)
-
-- Item A
-- Item B
-- Item C
-     
-####Unordered list (*)
-
-* Item A
-* Item B
-* Item C
-
-####Unordered list (plus sign and nested)
-                
-+ Item A
-+ Item B
-    + Item B 1
-    + Item B 2
-    + Item B 3
-+ Item C
-    * Item C 1
-    * Item C 2
-    * Item C 3
-
-####Ordered list
-                
-1. Item A
-2. Item B
-3. Item C
-                
-----
-                    
-###Tables
-                    
-First Header  | Second Header
-------------- | -------------
-Content Cell  | Content Cell
-Content Cell  | Content Cell 
-
-| First Header  | Second Header |
-| ------------- | ------------- |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
-
-| Function name | Description                    |
-| ------------- | ------------------------------ |
-| `help()`      | Display the help window.       |
-| `destroy()`   | **Destroy your computer!**     |
-
-| Item      | Value |
-| --------- | -----:|
-| Computer  | $1600 |
-| Phone     |   $12 |
-| Pipe      |    $1 |
-
-| Left-Aligned  | Center Aligned  | Right Aligned |
-| :------------ |:---------------:| -----:|
-| col 3 is      | some wordy text | $1600 |
-| col 2 is      | centered        |   $12 |
-| zebra stripes | are neat        |    $1 |
-                
-----
-
-##Markdown extras
-
-###GFM task list
-
-- [x] GFM task list 1
-- [x] GFM task list 2
-- [ ] GFM task list 3
-    - [ ] GFM task list 3-1
-    - [ ] GFM task list 3-2
-    - [ ] GFM task list 3-3
-- [ ] GFM task list 4
-    - [ ] GFM task list 4-1
-    - [ ] GFM task list 4-2
-
+- [x] Test Django with Ros
+- [x] Build a functional backend server
+- [x] Install the server in the robot
+- [ ] Build the front-end
+- [ ] Upgrade the Scripting abilities
+- [ ] Add tablet functionality to the server
