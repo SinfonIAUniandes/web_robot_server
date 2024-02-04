@@ -1,70 +1,60 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from django.shortcuts import render, HttpResponse
-from robot_toolkit_msgs.msg import speech_msg,animation_msg, leds_parameters_msg, set_angles_msg
-from geometry_msgs.msg import Twist
-from naoqi_bridge_msgs.msg import AudioBuffer
-from django.views.decorators.csrf import csrf_exempt
+
+import os
+import shutil
+import time
+
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.http import StreamingHttpResponse
-from services import services_speech as sSpeech
-from services import services_miscelanous as sMisc
+from django.shortcuts import render, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+
 from services import services_manipulation as sManipulation
+from services import services_miscelanous as sMisc
 from services import services_perception as sPerception
 from services import services_navigation as sNavigation
-import rospy
-import time
-import os
-import shutil
-from sounddevice import InputStream
-import sounddevice as sd
-import wave
-import soundfile as sf
-import shlex
-from psutil import Popen
-import numpy as np
-import threading
-import subprocess
+from services import services_speech as s_speech
 
 
 class RemoteC:
     def __init__(self):
 
-        #ROS Publishers
-        #self.speechPublisher = rospy.Publisher('/speech',speech_msg,queue_size=10)
-        #self.movePublisher = rospy.Publisher('/cmd_vel',Twist,queue_size=10)
-        #self.headPublisher = rospy.Publisher('/set_angles',set_angles_msg,queue_size=10)
-        #self.animationPublisher = rospy.Publisher('/animations',animation_msg,queue_size=10)
-        #self.ledsPublisher = rospy.Publisher('/leds',leds_parameters_msg,queue_size=10)
+        # ROS Publishers
+        # self.speechPublisher = rospy.Publisher('/speech',speech_msg,queue_size=10)
+        # self.movePublisher = rospy.Publisher('/cmd_vel',Twist,queue_size=10)
+        # self.headPublisher = rospy.Publisher('/set_angles',set_angles_msg,queue_size=10)
+        # self.animationPublisher = rospy.Publisher('/animations',animation_msg,queue_size=10)
+        # self.ledsPublisher = rospy.Publisher('/leds',leds_parameters_msg,queue_size=10)
 
-        #ROS Subscribers
-        #Suscriber for the robot microphone to get audio
-        #self.micSubscriber=rospy.Subscriber("/mic", AudioBuffer, self.audioCallbackSingleChannel)
+        # ROS Subscribers
+        # Suscriber for the robot microphone to get audio
+        # self.micSubscriber=rospy.Subscriber("/mic", AudioBuffer, self.audioCallbackSingleChannel)
 
-        #Constants
+        # Constants
         self.audioBuffer = ""
         self.ended = False
-        self.bateria = 100
+        self.battery = 100
 
-        #Toolkit messages to turn on robot funcionality
-        #sSpeech.startSpeechMessage()
-        #sMisc.startMiscMessage()
-        #sManipulation.startManipulationMessage()
-        #sPerception.startPerceptionMessage()
-        #sNavigation.startNavigationMessage()
+        # Toolkit messages to turn on robot funcionality
+        # sSpeech.startSpeechMessage()
+        # sMisc.startMiscMessage()
+        # sManipulation.startManipulationMessage()
+        # sPerception.startPerceptionMessage()
+        # sNavigation.startNavigationMessage()
 
-    def audioCallbackSingleChannel(self,data):
+    def audioCallbackSingleChannel(self, data):
         """
         Callback for the microphone subcriber of the robot
         """
         audio = data.data
         audio = list(audio)
         for i in audio:
-            self.audioBuffer+=str(i)+","
+            self.audioBuffer += str(i) + ","
         self.ended = True
 
-    def gen_message(self,msg):
+    def gen_message(self, msg):
         return '{}'.format(msg)
 
     def takeAudioBuffer(self):
@@ -77,70 +67,83 @@ class RemoteC:
 
 remote = RemoteC()
 
+
 # Create your views here.
 def home(request):
-    return render(request,"remoteController/base.html")
+    return render(request, "remoteController/base.html")
+
 
 def move(request):
-    geometry_msg = sNavigation.aux_mov(request.GET["direction"],request.GET["speed"])
+    geometry_msg = sNavigation.aux_mov(request.GET["direction"], request.GET["speed"])
     remote.movePublisher.publish(geometry_msg)
     return HttpResponse(status=204)
 
-def joyStick(request):
-    geometry_msg = sNavigation.aux_joy(request.GET["verticalAxis"],request.GET["horizontalAxis"])
+
+def joy_stick(request):
+    geometry_msg = sNavigation.aux_joy(request.GET["verticalAxis"], request.GET["horizontalAxis"])
     remote.movePublisher.publish(geometry_msg)
     return HttpResponse(status=204)
+
 
 def speak(request):
-    t2s_msg = sSpeech.genMsg(request.GET["language"],request.GET["words"])
+    t2s_msg = s_speech.genMsg(request.GET["language"], request.GET["words"])
     remote.speechPublisher.publish(t2s_msg)
     return HttpResponse(status=204)
+
 
 def display(request):
     sMisc.tabletService(request.GET["url"])
     return HttpResponse(status=204)
 
-def displayWeb(request):
+
+def display_web(request):
     sMisc.tabletServiceWeb(request.GET["url"])
     return HttpResponse(status=204)
+
 
 @csrf_exempt
 def save(request):
     imagen = request.FILES['imagen']
-    full_filename = os.path.join(settings.MEDIA_ROOT+"/img/", imagen.name.replace(" ",""))
-    fout = open(full_filename,'wb+')
+    full_filename = os.path.join(settings.MEDIA_ROOT + "/img/", imagen.name.replace(" ", ""))
+    fout = open(full_filename, 'wb+')
 
     file_content = ContentFile(imagen.read())
     for chunk in file_content.chunks():
         fout.write(chunk)
     fout.close()
-    sMisc.tabletService("http://192.168.0.250:8000/media/img/"+imagen.name.replace(" ",""))
+    sMisc.tabletService("http://192.168.0.250:8000/media/img/" + imagen.name.replace(" ", ""))
     return HttpResponse(status=204)
+
 
 def animate(request):
     anim_msg = sManipulation.genMsg(request.GET["animation"])
     remote.animationPublisher.publish(anim_msg)
     return HttpResponse(status=204)
 
-def setLeds(request):
-    leds_msg = sMisc.genMsg(request.GET["red"],request.GET["green"],request.GET["blue"])
+
+def set_leds(request):
+    leds_msg = sMisc.genMsg(request.GET["red"], request.GET["green"], request.GET["blue"])
     remote.ledsPublisher.publish(leds_msg)
-    time.sleep(0.5)    
+    time.sleep(0.5)
     return HttpResponse(status=204)
 
-def setVolume(request):
-    sSpeech.volumeService(int(request.GET["volume"]))
+
+def set_volume(request):
+    s_speech.volumeService(int(request.GET["volume"]))
     return HttpResponse(status=204)
 
-def getBattery(request):
-    #bateria = sMisc.batteryService()
-    if remote.bateria!=0:
-        remote.bateria -=20
-    else:
-        remote.bateria= 100
-    return HttpResponse(str(remote.bateria))
 
-def getAudio(request):
+def get_battery(request):
+    """
+    Get the battery level.
+
+    :param request: The HTTP request.
+    :return: The battery level as an HttpResponse.
+    """
+    return HttpResponse(str(sMisc.batteryService()))
+
+
+def get_audio(request):
     """
     Callback for save_audio_srv service: This service allows to record an audio with the microphones of the robot with a duration of x seconds.
     Args:
@@ -154,11 +157,11 @@ def getAudio(request):
     return response
 
 
-def delImgs(request):
+def delete_images(request):
     """
     Borra las imagenes almacenadas en media para evitar sobrecargar el servidor
     """
-    folderImagenes = settings.MEDIA_ROOT +"/img/"
+    folderImagenes = settings.MEDIA_ROOT + "/img/"
     for filename in os.listdir(folderImagenes):
         file_path = os.path.join(folderImagenes, filename)
         try:
@@ -170,8 +173,9 @@ def delImgs(request):
             print('Failed to delete %s. Reason: %s' % (file_path, e))
     return HttpResponse(status=204)
 
-def moveHead(request):
-    #mover cabeza robot
-    jointMsg=sManipulation.genHeadMsg(request.GET["angle0"],request.GET["angle1"])
+
+def move_head(request):
+    # mover cabeza robot
+    jointMsg = sManipulation.genHeadMsg(request.GET["angle0"], request.GET["angle1"])
     remote.headPublisher.publish(jointMsg)
     return HttpResponse(status=204)
