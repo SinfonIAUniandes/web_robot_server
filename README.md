@@ -44,5 +44,6 @@ The manual is available in the docs
 - [x] Build a functional backend server
 - [x] Install the server in the robot
 - [ ] Build the front-end
+- [ ] Complete remote controller manual
 - [ ] Upgrade the Scripting abilities
 - [ ] Add tablet functionality to the server
