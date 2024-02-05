@@ -9,8 +9,9 @@ export const useStick = (maxDistance = 64, deadZone = 0) => {
   const position = reactive({x: 0, y: 0});
 
   const onDown = (event) => {
-    event.preventDefault();
     active.value = true;
+    stick.value.style.transition = '0s';
+    event.preventDefault();
     if (event.changedTouches) {
       dragStart.x = event.changedTouches[0].clientX;
       dragStart.y = event.changedTouches[0].clientY;
@@ -30,6 +31,8 @@ export const useStick = (maxDistance = 64, deadZone = 0) => {
       for (let changed of event.changedTouches) {
         if (changed.identifier !== touchId.value) continue;
         found = true;
+        event.clientX = changed.clientX;
+        event.clientY = changed.clientY;
         if (found) break;
       }
 
