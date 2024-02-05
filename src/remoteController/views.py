@@ -80,7 +80,7 @@ def move(request):
 
 
 def joy_stick(request):
-    geometry_msg = sNavigation.aux_joy(request.GET["verticalAxis"], request.GET["horizontalAxis"])
+    geometry_msg = sNavigation.aux_joy(request.GET["vertical_axis"], request.GET["horizontal_axis"])
     remote.movePublisher.publish(geometry_msg)
     return HttpResponse(status=204)
 

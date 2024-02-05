@@ -2,13 +2,19 @@
   import JoyStickBase from "@/assets/joystick-base.png";
   import JoyStickHead from "@/assets/joystick-red.png";
   import { useStick } from "@/composables/useStick.js";
+  import { movementService } from "@/services/movementService.js";
+  import useInterval from "@/composables/useInterval.js";
   import { watch } from "vue";
 
-  const {position, stick} = useStick(40, 0);
+  const { movePepperWithJoyStick } = movementService();
 
-  watch(position, (value) => {
-    //TODO("Use joystick service")
-  }, {deep: true});
+  const {position, stick, state} = useStick(40, 0);
+
+  const {register, stop} = useInterval(() => {
+    movePepperWithJoyStick(position.x, position.y);
+  }, 50, false);
+
+  watch(state, (value) => value === "PRESSED" ? register() : stop());
 </script>
 
 <template>

@@ -1,10 +1,23 @@
 import { onMounted, onUnmounted } from "vue";
 
-const useInterval = (handler, timeout) => {
+const useInterval = (handler, timeout, register_on_init = true) => {
   let interval;
 
-  onMounted(() => interval = setInterval(handler, timeout));
-  onUnmounted(() => clearInterval(interval));
+  if (register_on_init) {
+    onMounted(() => register());
+  }
+
+  const register = () => {
+    interval = setInterval(handler, timeout);
+  }
+
+  const stop = () => {
+    clearInterval(interval);
+  }
+
+  onUnmounted(stop);
+
+  return {register, stop};
 }
 
 export default useInterval;

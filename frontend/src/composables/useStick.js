@@ -7,6 +7,7 @@ export const useStick = (maxDistance = 64, deadZone = 0) => {
   const touchId = ref(null);
   const active = ref(false);
   const position = reactive({x: 0, y: 0});
+  const state = ref("PAUSED");
 
   const onDown = (event) => {
     active.value = true;
@@ -20,6 +21,7 @@ export const useStick = (maxDistance = 64, deadZone = 0) => {
       dragStart.x = event.clientX;
       dragStart.y = event.clientY;
     }
+    state.value = "PRESSED";
   }
 
   const onMove = (event) => {
@@ -63,6 +65,7 @@ export const useStick = (maxDistance = 64, deadZone = 0) => {
     stick.value.style.transition = '.2s';
     stick.value.style.transform = `translate3d(0px, 0px, 0px)`;
 
+    state.value = "PAUSED";
     position.x = 0;
     position.y = 0;
     touchId.value = null;
@@ -73,5 +76,5 @@ export const useStick = (maxDistance = 64, deadZone = 0) => {
   useEventLister(document, ["mousemove", "touchmove"], onMove,{passive: false});
   useEventLister(document, ["mouseup", "touchend"], onUp);
 
-  return {stick, position};
+  return {stick, position, state};
 }
