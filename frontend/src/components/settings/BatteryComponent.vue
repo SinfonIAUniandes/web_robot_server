@@ -10,22 +10,23 @@
       : batteryLevel.value < 60
         ? batteryLevel.value < 30
           ? "bg-red-400"
-          : "bg-yellow-500"
-        : "bg-green-700",
+          : "bg-yellow-400"
+        : "bg-green-400",
   );
 </script>
 
 <template>
   <div class="w-[100px] flex items-center">
+    <div class="text-gray-100 text-center font-bold text-xs pr-1">
+      {{ loading ? "Loading..." : batteryLevel + "%" }}
+    </div>
     <div class="shadow w-1/2 rounded border-2 border-gray-400 my-1 relative">
-      <div class="text-gray-100 text-center font-bold text-xs">
-        {{ loading ? "Loading..." : batteryLevel + "%" }}
-      </div>
+      <div class="text-gray-100 text-center font-bold text-xs py-2" />
       <div
         class="top-0 absolute h-[100%]"
         :class="color"
-        :style="{ width: batteryLevel + '%', zIndex: -1 }"
-      ></div>
+        :style="{ width: batteryLevel + '%', zIndex: 1 }"
+      />
     </div>
     <div class="border-r-4 h-2 ml-[2px] rounded-r border-gray-400"></div>
   </div>

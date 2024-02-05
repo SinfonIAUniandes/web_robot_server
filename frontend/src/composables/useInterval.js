@@ -9,15 +9,15 @@ const useInterval = (handler, timeout, register_on_init = true) => {
 
   const register = () => {
     interval = setInterval(handler, timeout);
-  }
+  };
 
   const stop = () => {
     clearInterval(interval);
-  }
+  };
 
   onUnmounted(stop);
 
-  return {register, stop};
-}
+  return { register, stop };
+};
 
 export default useInterval;

@@ -5,7 +5,7 @@
 </script>
 
 <template>
-  <div class="flex items-center text-gray-100">
+  <div class="flex items-center gap-1 text-gray-100 text-sm">
     <span class="font-medium">Volume:</span>
     <input class="mx-1" type="range" min="0" max="100" v-model="volume" @change="setVolume" />
     {{ volume }}
