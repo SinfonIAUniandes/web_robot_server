@@ -68,7 +68,7 @@ def mockBatteryService():
 
     :return: A random integer between 0 and 100.
     """
-    return random.randint(0, 100)
+    return 100
 
 
 def rosBatteryService():
@@ -84,8 +84,8 @@ def rosBatteryService():
     :return:
     The battery percentage as an integer value.
     """
-    print("Waiting for battery tools service")
-    rospy.wait_for_service('/pytoolkit/ALBatteryService/get_porcentage')
+    print("Waiting for battery service")
+    rospy.wait_for_service("/pytoolkit/ALBatteryService/get_porcentage")
     try:
         batteryS = rospy.ServiceProxy('/pytoolkit/ALBatteryService/get_porcentage', battery_service_srv)
         batteryService = batteryS()
@@ -93,6 +93,7 @@ def rosBatteryService():
         return batteryService.porcentage
     except rospy.ServiceException as e:
         print("Service call failed")
+        return mockBatteryService()
 
 
 def batteryService():
@@ -101,6 +102,7 @@ def batteryService():
 
     :return: The battery service to be used.
     """
+    return mockBatteryService()
     if settings.USE_PEPPER_ROBOT:
         return rosBatteryService()
     return mockBatteryService()

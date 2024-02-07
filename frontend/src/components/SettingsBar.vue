@@ -4,6 +4,7 @@
   import { useConfig } from "@/stores/configStore.js";
   import { storeToRefs } from "pinia";
   import { ref } from "vue";
+  import MIcon from "@/components/common/MIcon.vue";
 
   const { speed } = storeToRefs(useConfig());
   const menuIsOpen = ref(false);
@@ -18,7 +19,7 @@
     <div class="flex justify-between items-center mb-2">
       <h1 class="text-xl">Settings</h1>
       <button class="font-bold" @click="menuIsOpen = !menuIsOpen">
-        <span class="text-xl mdi mdi-close" />
+        <MIcon class="text-xl" icon="close" />
       </button>
     </div>
     <nav class="flex flex-col items-start w-100">
@@ -34,7 +35,7 @@
     <div class="container mx-auto p-1 text-gray-100 grid grid-cols-3 text-lg font-medium">
       <div class="text-lg font-medium flex items-center gap-1">
         <button @click="menuIsOpen = !menuIsOpen" class="flex items-center lg:hidden">
-          <span class="text-3xl mdi mdi-menu" />
+          <MIcon class="text-3xl" icon="menu" />
         </button>
         <h1>Settings</h1>
         <span class="hidden lg:flex">:</span>
