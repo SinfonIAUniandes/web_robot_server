@@ -15,7 +15,7 @@ urlpatterns = [
     url("api/set/leds", views.set_leds, name="set_leds"),
     url("api/set/volume", views.set_volume, name="set_volume"),
     url("api/get/battery", views.get_battery, name="get_battery"),
-    url("api/get/audio/", views.get_audio, name="getAudio"),
+    url("api/get/audio", views.get_audio, name="getAudio"),
     url("api/delete/images", views.delete_images, name="delete_images"),
     url("", views.home, name="home")
 ]

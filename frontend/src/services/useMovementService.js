@@ -1,6 +1,6 @@
 import { useConfig } from "@/stores/configStore.js";
 import { storeToRefs } from "pinia";
-import { moveJoystickUri } from "@/config/endpoints.js";
+import { moveHeadUri, moveJoystickUri, moveUri } from "@/config/endpoints.js";
 import { ref } from "vue";
 
 const calculateMovement = (target, speed) => {
@@ -11,11 +11,18 @@ const calculateMovement = (target, speed) => {
 };
 
 const doJoystickRequest = (x, y, done) => {
-  done.value = false;
   fetch(moveJoystickUri(x, y)).finally(() => (done.value = true));
 };
 
-export const movementService = () => {
+const doHeadRequest = (x, y, done) =>{
+  fetch(moveHeadUri(x, y)).finally(() => (done.value = true));
+}
+
+const doMoveRequest = (direction, speed, done) =>{
+  fetch(moveUri(direction, speed)).finally(() => (done.value = true));
+}
+
+export const useMovementService = () => {
   const { speed } = storeToRefs(useConfig());
   const done = ref(true);
 
@@ -25,9 +32,17 @@ export const movementService = () => {
     doJoystickRequest(xAxis, yAxis, done);
   };
 
-  const movePepper = () => {};
+  const movePepper = (direction) => {
+    if (done.value) return;
+    done.value = false;
+    doMoveRequest(direction, speed.value, done)
+  };
 
-  const moveHead = () => {};
+  const moveHead = (angleX, angleY) => {
+    if (!done.value) return;
+    done.value = false;
+    doHeadRequest(angleX, angleY, done);
+  };
 
   return { movePepperWithJoyStick, movePepper, moveHead };
 };

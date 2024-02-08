@@ -86,7 +86,7 @@ def joy_stick(request):
 
 
 def speak(request):
-    t2s_msg = s_speech.genMsg(request.GET["language"], request.GET["words"])
+    t2s_msg = s_speech.genMsg(request.GET["language"], request.GET["text"])
     remote.speechPublisher.publish(t2s_msg)
     return HttpResponse(status=204)
 

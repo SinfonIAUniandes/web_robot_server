@@ -102,7 +102,6 @@ def batteryService():
 
     :return: The battery service to be used.
     """
-    return mockBatteryService()
     if settings.USE_PEPPER_ROBOT:
         return rosBatteryService()
     return mockBatteryService()
