@@ -2,7 +2,7 @@
   import JoyStickBase from "@/assets/joystick-base.png";
   import JoyStickHead from "@/assets/joystick-red.png";
   import { useStick } from "@/composables/useStick.js";
-  import { useMovementService } from "@/services/useMovementService.js";
+  import { useMovementService } from "@/services/movementService.js";
   import useInterval from "@/composables/useInterval.js";
   import { watch } from "vue";
 
