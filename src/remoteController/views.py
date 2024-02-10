@@ -4,45 +4,50 @@ from __future__ import unicode_literals
 import os
 import shutil
 import time
+import wave
 
+import rospy
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.http import StreamingHttpResponse
 from django.shortcuts import render, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from geometry_msgs.msg import Twist
+from naoqi_bridge_msgs.msg import AudioBuffer
+from robot_toolkit_msgs.msg import speech_msg, set_angles_msg, animation_msg, leds_parameters_msg
 
 from services import services_manipulation as sManipulation
 from services import services_miscelanous as sMisc
-from services import services_perception as sPerception
 from services import services_navigation as sNavigation
-from services import services_speech as s_speech
+from services import services_perception as sPerception
+from services import services_speech as sSpeech
 
 
 class RemoteC:
     def __init__(self):
 
         # ROS Publishers
-        # self.speechPublisher = rospy.Publisher('/speech',speech_msg,queue_size=10)
-        # self.movePublisher = rospy.Publisher('/cmd_vel',Twist,queue_size=10)
-        # self.headPublisher = rospy.Publisher('/set_angles',set_angles_msg,queue_size=10)
-        # self.animationPublisher = rospy.Publisher('/animations',animation_msg,queue_size=10)
-        # self.ledsPublisher = rospy.Publisher('/leds',leds_parameters_msg,queue_size=10)
+        if settings.USE_PEPPER_ROBOT:
+            sSpeech.startSpeechMessage()
+            sMisc.startMiscMessage()
+            sManipulation.startManipulationMessage()
+            sPerception.startPerceptionMessage()
+            sNavigation.startNavigationMessage()
 
-        # ROS Subscribers
-        # Suscriber for the robot microphone to get audio
-        # self.micSubscriber=rospy.Subscriber("/mic", AudioBuffer, self.audioCallbackSingleChannel)
+            self.speechPublisher = rospy.Publisher('/speech', speech_msg, queue_size=10)
+            self.movePublisher = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
+            self.headPublisher = rospy.Publisher('/set_angles', set_angles_msg, queue_size=10)
+            self.animationPublisher = rospy.Publisher('/animations', animation_msg, queue_size=10)
+            self.ledsPublisher = rospy.Publisher('/leds', leds_parameters_msg, queue_size=10)
+
+            # ROS Subscribers
+            # Suscriber for the robot microphone to get audio
+            self.micSubscriber = rospy.Subscriber("/mic", AudioBuffer, self.audioCallbackSingleChannel)
 
         # Constants
         self.audioBuffer = ""
         self.ended = False
         self.battery = 100
-
-        # Toolkit messages to turn on robot funcionality
-        # sSpeech.startSpeechMessage()
-        # sMisc.startMiscMessage()
-        # sManipulation.startManipulationMessage()
-        # sPerception.startPerceptionMessage()
-        # sNavigation.startNavigationMessage()
 
     def audioCallbackSingleChannel(self, data):
         """
@@ -63,6 +68,10 @@ class RemoteC:
                 yield self.gen_message(self.audioBuffer)
                 self.audioBuffer = ""
                 self.ended = False
+
+    def mockAudioBuffer(self):
+        f = wave.open(settings.MEDIA_ROOT + "/audio/mario.wav")
+        yield f.readframes(1000000)
 
 
 remote = RemoteC()
@@ -133,7 +142,7 @@ def set_volume(request):
     :param request: HttpRequest object that contains the volume value in the GET parameters.
     :return: HttpResponse with a status code of 204.
     """
-    s_speech.volumeService(int(request.GET["volume"]))
+    sSpeech.volumeService(int(request.GET["volume"]))
     return HttpResponse(status=204)
 
 
@@ -155,9 +164,12 @@ def get_audio(request):
     Returns:
         Returns an answer (string): Indicates if the audio file was created.
     """
-    response = StreamingHttpResponse(remote.takeAudioBuffer())
-    response['Content-Type'] = 'text/event-stream'
-    response['Cache-Control'] = 'no-cache'
+    if settings.USE_PEPPER_ROBOT:
+        response = StreamingHttpResponse(remote.takeAudioBuffer(), content_type="text/event-stream", status=200)
+    else:
+        response = StreamingHttpResponse(remote.mockAudioBuffer(), content_type="text/event-stream", status=200)
+
+    response["Cache-Control"] = "no-cache"
     return response
 
 

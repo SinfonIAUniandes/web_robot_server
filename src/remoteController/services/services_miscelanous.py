@@ -86,6 +86,7 @@ def rosBatteryService():
     """
     print("Waiting for battery service")
     rospy.wait_for_service("/pytoolkit/ALBatteryService/get_porcentage")
+    print("Finished waiting for battery service")
     try:
         batteryS = rospy.ServiceProxy('/pytoolkit/ALBatteryService/get_porcentage', battery_service_srv)
         batteryService = batteryS()

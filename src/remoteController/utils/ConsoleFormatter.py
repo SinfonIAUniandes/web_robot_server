@@ -5,15 +5,16 @@ class ConsoleFormatter:
     Attributes:
         colors (dict): Dictionary whose keys are descriptions of the value colors.
     """
+
     def __init__(self):
-        self.colors={
-        "HEADER":'\033[95m',
-        "OKBLUE": '\033[94m',
-        "OKGREEN": '\033[92m',
-        "WARNING": '\033[93m',
-        "FAIL": '\033[91m',
-        "ENDC": '\033[0m'}
-        
+        self.colors = {
+            "HEADER": '\033[95m',
+            "OKBLUE": '\033[94m',
+            "OKGREEN": '\033[92m',
+            "WARNING": '\033[93m',
+            "FAIL": '\033[91m',
+            "ENDC": '\033[0m'}
+
     def format(self, text, format):
         """
         Given a text and a specified format returns the text with the corresponding color for console.
@@ -28,4 +29,4 @@ class ConsoleFormatter:
         Returns:
             Returns the text formatted with the color for console corresponding to the format especified.
         """
-        return(self.colors[format]+text+self.colors["ENDC"])
+        return (self.colors[format] + text + self.colors["ENDC"])

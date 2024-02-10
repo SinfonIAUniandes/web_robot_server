@@ -5,12 +5,19 @@
   import { storeToRefs } from "pinia";
   import { ref } from "vue";
   import MIcon from "@/components/common/MIcon.vue";
+  import { useAudioService } from "@/services/audioService.js";
 
   const { speed } = storeToRefs(useConfig());
+
+  const {connect, disconnect, isConnected} = useAudioService();
+
   const menuIsOpen = ref(false);
 </script>
 
 <template>
+  <button @click="connect"><MIcon icon="play" /></button>
+  <button @click="disconnect"><MIcon icon="stop" /></button>
+  <div>{{isConnected}}</div>
   <div
     v-if="menuIsOpen"
     class="absolute w-[250px] flex flex-col lg:hidden text-white p-5 bg-gray-800 shadow-2xl h-screen"
