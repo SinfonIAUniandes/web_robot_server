@@ -3,35 +3,54 @@
 </script>
 
 <template>
-  <div>
-    <table>
-      <tr>
-        <td>
-          <MIcon icon="rotate-left" />
-        </td>
-        <td>
-          <MIcon icon="arrow-up-bold" />
-        </td>
-        <td>
-          <MIcon icon="rotate-right" />
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <MIcon icon="arrow-left-bold" />
-        </td>
-        <td></td>
-        <td>
-          <MIcon icon="arrow-right-bold" />
-        </td>
-      </tr>
-      <tr>
-        <td></td>
-        <td>
-          <MIcon icon="arrow-down-bold" />
-        </td>
-        <td></td>
-      </tr>
-    </table>
+  <div class="dpad">
+    <button type="button" class="dpad-button dpad-up">
+      <MIcon icon="arrow-up-thick" />
+    </button>
+    <button type="button" class="dpad-button dpad-right">
+      <MIcon icon="arrow-right-thick" />
+    </button>
+    <button type="button" class="dpad-button dpad-down">
+      <MIcon icon="arrow-down-thick" />
+    </button>
+    <button type="button" class="dpad-button dpad-left">
+      <MIcon icon="arrow-left-thick" />
+    </button>
   </div>
 </template>
+
+<style scoped>
+  .dpad {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #ccc;
+  }
+
+  .dpad-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+  }
+
+  .dpad-up {
+    margin-bottom: 10px;
+  }
+
+  .dpad-right {
+    margin-left: 10px;
+  }
+
+  .dpad-down {
+    margin-top: 10px;
+  }
+
+  .dpad-left {
+    margin-right: 10px;
+  }
+</style>

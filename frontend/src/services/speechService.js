@@ -1,7 +1,7 @@
 import { ref } from "vue";
 import { speakUri } from "@/config/endpoints.js";
 
-export const availableLanguages = ["english", "spanish"];
+export const availableLanguages = ["English", "Spanish"];
 
 const requestSpeech = (text, language, ready) => {
   fetch(speakUri(text, language))

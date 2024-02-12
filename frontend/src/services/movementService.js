@@ -28,6 +28,7 @@ export const useMovementService = () => {
 
   const movePepperWithJoyStick = (x, y) => {
     if (!done.value) return;
+    done.value = false;
     const { xAxis, yAxis } = calculateMovement({ x, y }, speed.value);
     doJoystickRequest(xAxis, yAxis, done);
   };

@@ -15,9 +15,6 @@
 </script>
 
 <template>
-  <button @click="connect"><MIcon icon="play" /></button>
-  <button @click="disconnect"><MIcon icon="stop" /></button>
-  <div>{{isConnected}}</div>
   <div
     v-if="menuIsOpen"
     class="absolute w-[250px] flex flex-col lg:hidden text-white p-5 bg-gray-800 shadow-2xl h-screen"
@@ -44,6 +41,12 @@
         <button @click="menuIsOpen = !menuIsOpen" class="flex items-center lg:hidden">
           <MIcon class="text-3xl" icon="menu" />
         </button>
+        <div class="hidden lg:flex items-center justify-center">
+          <div v-if="isConnected" class="p-1 rounded-full bg-green-500"></div>
+          <div v-else class="p-1 rounded-full bg-red-500"></div>
+          <button v-if="!isConnected" @click="connect"><MIcon icon="volume-high" /></button>
+          <button v-else @click="disconnect"><MIcon icon="volume-variant-off" /></button>
+        </div>
         <h1>Settings</h1>
         <span class="hidden lg:flex">:</span>
         <VolumeHandler class="lg:flex hidden" />

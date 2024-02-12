@@ -1,6 +1,6 @@
-import { onMounted, onUnmounted, toValue } from "vue";
+import { onBeforeUnmount, onMounted, onUnmounted, toValue } from "vue";
 
-const useEventLister = (target, event, handler, options = {}) => {
+const useEventListener = (target, event, handler, options = {}) => {
   onMounted(() => {
     if (typeof event === typeof []) {
       event.forEach((e) => toValue(target).addEventListener(e, handler, options));
@@ -9,7 +9,7 @@ const useEventLister = (target, event, handler, options = {}) => {
     }
   });
 
-  onUnmounted(() => {
+  onBeforeUnmount(() => {
     if (typeof event === typeof []) {
       event.forEach((e) => toValue(target).removeEventListener(e, handler, options));
     } else {
@@ -18,4 +18,4 @@ const useEventLister = (target, event, handler, options = {}) => {
   });
 };
 
-export default useEventLister;
+export default useEventListener;

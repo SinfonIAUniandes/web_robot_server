@@ -1,5 +1,5 @@
 import { reactive, ref } from "vue";
-import useEventLister from "@/composables/useEventLister.js";
+import useEventListener from "@/composables/useEventListener.js";
 
 export const useStick = (maxDistance = 64, deadZone = 0) => {
   const stick = ref();
@@ -73,9 +73,9 @@ export const useStick = (maxDistance = 64, deadZone = 0) => {
     active.value = false;
   };
 
-  useEventLister(stick, ["mousedown", "touchstart"], onDown);
-  useEventLister(document, ["mousemove", "touchmove"], onMove, { passive: false });
-  useEventLister(document, ["mouseup", "touchend"], onUp);
+  useEventListener(stick, ["mousedown", "touchstart"], onDown);
+  useEventListener(document, ["mousemove", "touchmove"], onMove, { passive: false });
+  useEventListener(document, ["mouseup", "touchend"], onUp);
 
   return { stick, position, state };
 };

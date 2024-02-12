@@ -25,7 +25,6 @@ from services import services_speech as sSpeech
 
 class RemoteC:
     def __init__(self):
-
         # ROS Publishers
         if settings.USE_PEPPER_ROBOT:
             sSpeech.startSpeechMessage()
@@ -95,7 +94,7 @@ def joy_stick(request):
 
 
 def speak(request):
-    t2s_msg = s_speech.genMsg(request.GET["language"], request.GET["text"])
+    t2s_msg = sSpeech.genMsg(request.GET["language"], request.GET["text"])
     remote.speechPublisher.publish(t2s_msg)
     return HttpResponse(status=204)
 

@@ -6,7 +6,17 @@ from robot_toolkit_msgs.srv import misc_tools_srv, tablet_service_srv, battery_s
 from django.conf import settings
 
 def startMiscMessage():
-    #Service misc call
+    """
+    Starts a miscellaneous message service call by enabling all commands.
+
+    This method creates a miscellaneous message object and sets its command attribute to "enable_all".
+    It then calls the miscToolsService method passing the created miscellaneous message object.
+
+    Note: This method should be used to enable all miscellaneous commands before invoking the miscToolsService.
+
+    Returns:
+        None
+    """
     miscMessage = misc_tools_msg()
     miscMessage.command = "enable_all"
     miscToolsService(miscMessage)
@@ -85,7 +95,7 @@ def rosBatteryService():
     The battery percentage as an integer value.
     """
     print("Waiting for battery service")
-    rospy.wait_for_service("/pytoolkit/ALBatteryService/get_porcentage")
+    rospy.wait_for_service('/pytoolkit/ALBatteryService/get_porcentage')
     print("Finished waiting for battery service")
     try:
         batteryS = rospy.ServiceProxy('/pytoolkit/ALBatteryService/get_porcentage', battery_service_srv)

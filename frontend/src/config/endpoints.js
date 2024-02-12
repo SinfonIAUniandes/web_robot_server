@@ -19,7 +19,7 @@ export const moveUri = (direction, speed) =>
   `${SERVER_URL}/move?direction=${direction}&speed=${speed}`;
 
 export const speakUri = (text, language) =>
-  `${SERVER_URL}/joystick?text=${text}&language=${language}`;
+  `${SERVER_URL}/speak?text=${text}&language=${language}`;
 
 export const displayImageUri = (url) => `${showUri}/image?url=${url}`;
 export const displayWebUri = (url) => `${showUri}/web?url=${url}`;
