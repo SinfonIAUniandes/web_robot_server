@@ -43,3 +43,4 @@ backups/
 */lerna-debug.log*
 
 /src/static/remoteController/front
+/src/media/img/*
