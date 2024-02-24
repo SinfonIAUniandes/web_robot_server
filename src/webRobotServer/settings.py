@@ -19,6 +19,7 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 CORS_ORIGIN_ALLOW_ALL = True
 
 USE_PEPPER_ROBOT = True
+SERVER_IP = os.environ.get("ROS_IP", "127.0.0.1")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/

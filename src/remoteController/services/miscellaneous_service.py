@@ -1,6 +1,8 @@
-import random
+import os
+import shutil
 
 import rospy
+from django.core.files.base import ContentFile
 from robot_toolkit_msgs.msg import misc_tools_msg, leds_parameters_msg
 from robot_toolkit_msgs.srv import misc_tools_srv, tablet_service_srv, battery_service_srv
 from django.conf import settings
@@ -117,3 +119,28 @@ def batteryService():
         return rosBatteryService()
     return mockBatteryService()
 
+
+def save_image(image):
+    filename = image.name.replace(" ", "_")
+
+    full_filename = os.path.join(settings.MEDIA_ROOT + "/img/", filename)
+    file_output = open(full_filename, 'wb+')
+
+    file_content = ContentFile(image.read())
+    for chunk in file_content.chunks():
+        file_output.write(chunk)
+    file_output.close()
+    return filename
+
+
+def remove_images():
+    images_folder = settings.MEDIA_ROOT + "/img/"
+    for filename in os.listdir(images_folder):
+        file_path = os.path.join(images_folder, filename)
+        try:
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)
+            elif os.path.isdir(file_path):
+                shutil.rmtree(file_path)
+        except Exception as e:
+            print('Failed to delete %s. Reason: %s' % (file_path, e))

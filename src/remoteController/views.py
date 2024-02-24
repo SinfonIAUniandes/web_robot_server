@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import os
-import shutil
 import time
 import wave
 
 import rospy
 from django.conf import settings
-from django.core.files.base import ContentFile
 from django.http import StreamingHttpResponse
 from django.shortcuts import render, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -17,7 +14,7 @@ from naoqi_bridge_msgs.msg import AudioBuffer
 from robot_toolkit_msgs.msg import speech_msg, set_angles_msg, animation_msg, leds_parameters_msg
 
 from services import services_manipulation as sManipulation
-from services import services_miscelanous as sMisc
+from services import miscellaneous_service
 from services import services_navigation as sNavigation
 from services import services_perception as sPerception
 from services import services_speech as sSpeech
@@ -28,7 +25,7 @@ class RemoteC:
         # ROS Publishers
         if settings.USE_PEPPER_ROBOT:
             sSpeech.startSpeechMessage()
-            sMisc.startMiscMessage()
+            miscellaneous_service.startMiscMessage()
             sManipulation.startManipulationMessage()
             sPerception.startPerceptionMessage()
             sNavigation.startNavigationMessage()
@@ -100,26 +97,19 @@ def speak(request):
 
 
 def display(request):
-    sMisc.tabletService(request.GET["url"])
+    miscellaneous_service.tabletService(request.GET["url"])
     return HttpResponse(status=204)
 
 
 def display_web(request):
-    sMisc.tabletServiceWeb(request.GET["url"])
+    miscellaneous_service.tabletServiceWeb(request.GET["url"])
     return HttpResponse(status=204)
 
 
 @csrf_exempt
 def save(request):
-    imagen = request.FILES['imagen']
-    full_filename = os.path.join(settings.MEDIA_ROOT + "/img/", imagen.name.replace(" ", ""))
-    fout = open(full_filename, 'wb+')
-
-    file_content = ContentFile(imagen.read())
-    for chunk in file_content.chunks():
-        fout.write(chunk)
-    fout.close()
-    sMisc.tabletService("http://192.168.0.250:8000/media/img/" + imagen.name.replace(" ", ""))
+    filename = miscellaneous_service.save_image(request.FILES["image"])
+    miscellaneous_service.tabletService("http://%s:8000/media/img/%s" % (settings.SERVER_IP, filename))
     return HttpResponse(status=204)
 
 
@@ -130,13 +120,13 @@ def animate(request):
 
 
 def set_leds(request):
-    leds_msg = sMisc.genMsg(request.GET["red"], request.GET["green"], request.GET["blue"])
+    leds_msg = miscellaneous_service.genMsg(request.GET["red"], request.GET["green"], request.GET["blue"])
     remote.ledsPublisher.publish(leds_msg)
     time.sleep(0.5)
     return HttpResponse(status=204)
 
 def setVolume(request):
-    sSpeech.setVolumeService(int(request.GET["volume"]))
+    sSpeech.set_volume_service(int(request.GET["volume"]))
     return HttpResponse(status=204)
 
 def getVolume(request):
@@ -150,7 +140,7 @@ def get_battery(request):
     :param request: The HTTP request.
     :return: The battery level as an HttpResponse.
     """
-    return HttpResponse(str(sMisc.batteryService()))
+    return HttpResponse(str(miscellaneous_service.batteryService()))
 
 
 def get_audio(request):
@@ -170,25 +160,13 @@ def get_audio(request):
     return response
 
 
-def delete_images(request):
+def delete_images():
     """
     :delete_images:
 
     Deletes all images from the media folder.
-
-    :param request: The HTTP request. This parameter is not used in the method.
-    :return: An HttpResponse with status code 204 indicating that the images have been successfully deleted.
     """
-    folderImagenes = settings.MEDIA_ROOT + "/img/"
-    for filename in os.listdir(folderImagenes):
-        file_path = os.path.join(folderImagenes, filename)
-        try:
-            if os.path.isfile(file_path) or os.path.islink(file_path):
-                os.unlink(file_path)
-            elif os.path.isdir(file_path):
-                shutil.rmtree(file_path)
-        except Exception as e:
-            print('Failed to delete %s. Reason: %s' % (file_path, e))
+    miscellaneous_service.remove_images()
     return HttpResponse(status=204)
 
 
