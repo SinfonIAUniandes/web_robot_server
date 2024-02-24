@@ -1,12 +1,14 @@
-import { useConfig } from "@/stores/configStore.js";
+import { useConfig, SPEED_RANGE, ROBOT_MAXIMUM_SPEED } from "@/stores/configStore.js";
 import { storeToRefs } from "pinia";
 import { moveHeadUri, moveJoystickUri, moveUri } from "@/config/endpoints.js";
 import { ref } from "vue";
 
 const calculateMovement = (target, speed) => {
+  const metersPerSecond = speed * (ROBOT_MAXIMUM_SPEED / (SPEED_RANGE[1] - SPEED_RANGE[0]));
+
   return {
-    xAxis: (target.x * speed) / 100,
-    yAxis: (target.y * speed) / 100,
+    xAxis: target.x * metersPerSecond,
+    yAxis: target.y * metersPerSecond,
   };
 };
 
