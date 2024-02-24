@@ -1,7 +1,7 @@
 import rospy
 from robot_toolkit_msgs.msg import audio_tools_msg, speech_msg
-from robot_toolkit_msgs.srv import audio_tools_srv, set_output_volume_srv
 from django.conf import settings
+from robot_toolkit_msgs.srv import audio_tools_srv, set_output_volume_srv, battery_service_srv
 
 def startSpeechMessage():
     #Service speech call
@@ -53,26 +53,51 @@ def genMsg(language, text):
     return t2s_msg
 
 
-def mockVolumeService(volume):
+def mock_get_volume_service():
+    return 100
+
+
+def ros_get_volume_service():
+    """
+    Changes the volume of the robots output
+    """
+    print("Waiting for volume tools service")
+    rospy.wait_for_service('/pytoolkit/ALAudioDevice/get_output_volume_srv')
+    try:
+        volumeS = rospy.ServiceProxy('/pytoolkit/ALAudioDevice/get_output_volume_srv', battery_service_srv)
+        volumeService = volumeS()
+        print("Volume service connected!")
+        return volumeService.porcentage
+    except rospy.ServiceException as e:
+        print("Service call failed")
+
+
+def get_volume_service():
+    if settings.USE_PEPPER_ROBOT:
+        return ros_get_volume_service()
+    return mock_get_volume_service()
+
+
+def mock_set_volume_service(volume):
     print("Volume set to "+str(volume))
 
 
-def rosVolumeService(volume):
+def ros_set_volume_service(volume):
     print("Waiting for volume tools service")
     rospy.wait_for_service('/pytoolkit/ALAudioDevice/set_output_volume_srv')
     try:
         volumeS = rospy.ServiceProxy('/pytoolkit/ALAudioDevice/set_output_volume_srv', set_output_volume_srv)
-        volumeService = volumeS(volume)
+        volumeS(volume)
         print("Volume service connected!")
     except rospy.ServiceException as e:
         print("Service call failed")
 
 
-def volumeService(volume):
+def set_volume_service(volume):
     """
     Changes the volume of the robots output
     """
     if settings.USE_PEPPER_ROBOT:
-        rosVolumeService(volume)
+        ros_set_volume_service(volume)
     else:
-        mockVolumeService(volume)
+        mock_set_volume_service(volume)

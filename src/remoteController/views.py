@@ -135,15 +135,13 @@ def set_leds(request):
     time.sleep(0.5)
     return HttpResponse(status=204)
 
-
-def set_volume(request):
-    """
-    :param request: HttpRequest object that contains the volume value in the GET parameters.
-    :return: HttpResponse with a status code of 204.
-    """
-    sSpeech.volumeService(int(request.GET["volume"]))
+def setVolume(request):
+    sSpeech.setVolumeService(int(request.GET["volume"]))
     return HttpResponse(status=204)
 
+def getVolume(request):
+    volume = sSpeech.ros_get_volume_service()
+    return HttpResponse(volume)
 
 def get_battery(request):
     """
