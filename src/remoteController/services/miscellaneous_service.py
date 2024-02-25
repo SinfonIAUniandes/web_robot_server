@@ -45,22 +45,17 @@ def genMsg(red, green, blue):
     leds_msg.time = 0
     return leds_msg
 
-def tabletService(url):
-    """
-    Changes what's being displayed in the robots tablet
-    """
-    print("Waiting for tablet tools service")
-    rospy.wait_for_service('/pytoolkit/ALTabletService/show_image_srv')
-    try:
-        tablet = rospy.ServiceProxy('/pytoolkit/ALTabletService/show_image_srv', tablet_service_srv)
-        tabletService = tablet(url)
-        print("Tablet service connected!")
-    except rospy.ServiceException as e:
-        print("Service call failed")
+def show_img_service(url):
+    if settings.USE_PEPPER_ROBOT:
+        ros_show_img(url)
 
-def tabletServiceWeb(url):
+def show_web_service(url):
+    if settings.USE_PEPPER_ROBOT:
+        ros_show_web(url)
+
+def ros_show_web(url):
     """
-    Changes what's being displayed in the robots tablet
+    Shows a webpage in the robots tablet
     """
     print("Waiting for tablet tools service")
     rospy.wait_for_service('/pytoolkit/ALTabletService/show_web_view_srv')
@@ -71,8 +66,21 @@ def tabletServiceWeb(url):
     except rospy.ServiceException as e:
         print("Service call failed")
 
+def ros_show_img(url):
+    """
+    Shows an image in the robots tablet
+    """
+    print("Waiting for tablet tools service")
+    rospy.wait_for_service('/pytoolkit/ALTabletService/show_image_srv')
+    try:
+        tablet = rospy.ServiceProxy('/pytoolkit/ALTabletService/show_image_srv', tablet_service_srv)
+        tabletService = tablet(url)
+        print("Tablet service connected!")
+    except rospy.ServiceException as e:
+        print("Service call failed")
 
-def mockBatteryService():
+
+def mock_battery_service():
     """
     MockBatteryService
 
@@ -83,7 +91,7 @@ def mockBatteryService():
     return 100
 
 
-def rosBatteryService():
+def ros_battery_service():
     """
     Function: rosBatteryService
 
@@ -109,15 +117,15 @@ def rosBatteryService():
         return mockBatteryService()
 
 
-def batteryService():
+def battery_service():
     """
     Returns the battery service based on the settings.
 
     :return: The battery service to be used.
     """
     if settings.USE_PEPPER_ROBOT:
-        return rosBatteryService()
-    return mockBatteryService()
+        return ros_battery_service()
+    return mock_battery_service()
 
 
 def save_image(image):

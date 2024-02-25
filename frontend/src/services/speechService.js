@@ -10,7 +10,7 @@ const requestSpeech = (text, language, ready) => {
 
 export const useSpeechService = () => {
   const text = ref("");
-  const language = ref("");
+  const language = ref("English");
   const ready = ref(true);
 
   const sendRequest = () => {

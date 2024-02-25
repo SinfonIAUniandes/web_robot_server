@@ -25,5 +25,6 @@ export const moveUri = (direction, speed) =>
 export const speakUri = (text, language) =>
   `${SERVER_URL}/speak?text=${text}&language=${language}`;
 
+export const saveImageUri = (url) => `${SERVER_URL}/save/image`;
 export const displayImageUri = (url) => `${showUri}/image?url=${url}`;
 export const displayWebUri = (url) => `${showUri}/web?url=${url}`;

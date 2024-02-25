@@ -13,21 +13,21 @@ from geometry_msgs.msg import Twist
 from naoqi_bridge_msgs.msg import AudioBuffer
 from robot_toolkit_msgs.msg import speech_msg, set_angles_msg, animation_msg, leds_parameters_msg
 
-from services import services_manipulation as sManipulation
+from services import manipulation_services
 from services import miscellaneous_service
-from services import services_navigation as sNavigation
-from services import services_perception as sPerception
-from services import services_speech as sSpeech
+from services import navigation_services
+from services import perception_services
+from services import speech_services
 
 
 class RemoteC:
     def __init__(self):
         # ROS Publishers
         if settings.USE_PEPPER_ROBOT:
-            sSpeech.startSpeechMessage()
+            speech_services.startSpeechMessage()
             miscellaneous_service.startMiscMessage()
-            sManipulation.startManipulationMessage()
-            sPerception.startPerceptionMessage()
+            navigation_services.startManipulationMessage()
+            perception_services.startPerceptionMessage()
             sNavigation.startNavigationMessage()
 
             self.speechPublisher = rospy.Publisher('/speech', speech_msg, queue_size=10)
@@ -80,57 +80,62 @@ def home(request):
 
 def move(request):
     geometry_msg = sNavigation.aux_mov(request.GET["direction"], request.GET["speed"])
-    remote.movePublisher.publish(geometry_msg)
+    if settings.USE_PEPPER_ROBOT:
+        remote.movePublisher.publish(geometry_msg)
     return HttpResponse(status=204)
 
 
 def joy_stick(request):
     geometry_msg = sNavigation.aux_joy(request.GET["vertical_axis"], request.GET["horizontal_axis"])
-    remote.movePublisher.publish(geometry_msg)
+    if settings.USE_PEPPER_ROBOT:
+        remote.movePublisher.publish(geometry_msg)
     return HttpResponse(status=204)
 
 
 def speak(request):
-    t2s_msg = sSpeech.genMsg(request.GET["language"], request.GET["text"])
-    remote.speechPublisher.publish(t2s_msg)
+    t2s_msg = speech_services.genMsg(request.GET["language"], request.GET["text"])
+    if settings.USE_PEPPER_ROBOT:
+        remote.speechPublisher.publish(t2s_msg)
     return HttpResponse(status=204)
 
 
-def display(request):
-    miscellaneous_service.tabletService(request.GET["url"])
+def show_image(request):
+    miscellaneous_service.show_img_service(request.GET["url"])
     return HttpResponse(status=204)
 
 
-def display_web(request):
-    miscellaneous_service.tabletServiceWeb(request.GET["url"])
+def show_web(request):
+    miscellaneous_service.show_web_service(request.GET["url"])
     return HttpResponse(status=204)
 
 
 @csrf_exempt
-def save(request):
+def save_image(request):
     filename = miscellaneous_service.save_image(request.FILES["image"])
-    miscellaneous_service.tabletService("http://%s:8000/media/img/%s" % (settings.SERVER_IP, filename))
+    miscellaneous_service.show_img_service("http://%s:8000/media/img/%s" % (settings.SERVER_IP, filename))
     return HttpResponse(status=204)
 
 
 def animate(request):
-    anim_msg = sManipulation.genMsg(request.GET["animation"])
-    remote.animationPublisher.publish(anim_msg)
+    anim_msg = navigation_services.genMsg(request.GET["animation"])
+    if settings.USE_PEPPER_ROBOT:
+        remote.animationPublisher.publish(anim_msg)
     return HttpResponse(status=204)
 
 
 def set_leds(request):
     leds_msg = miscellaneous_service.genMsg(request.GET["red"], request.GET["green"], request.GET["blue"])
-    remote.ledsPublisher.publish(leds_msg)
+    if settings.USE_PEPPER_ROBOT:
+        remote.ledsPublisher.publish(leds_msg)
     time.sleep(0.5)
     return HttpResponse(status=204)
 
 def set_volume(request):
-    sSpeech.set_volume_service(int(request.GET["volume"]))
+    speech_services.set_volume_service(int(request.GET["volume"]))
     return HttpResponse(status=204)
 
 def get_volume(request):
-    volume = sSpeech.ros_get_volume_service()
+    volume = speech_services.ros_get_volume_service()
     return HttpResponse(volume)
 
 def get_battery(request):
@@ -140,7 +145,7 @@ def get_battery(request):
     :param request: The HTTP request.
     :return: The battery level as an HttpResponse.
     """
-    return HttpResponse(str(miscellaneous_service.batteryService()))
+    return HttpResponse(str(miscellaneous_service.battery_service()))
 
 
 def get_audio(request):
@@ -172,6 +177,7 @@ def delete_images():
 
 def move_head(request):
     # mover cabeza robot
-    jointMsg = sManipulation.genHeadMsg(request.GET["angle0"], request.GET["angle1"])
-    remote.headPublisher.publish(jointMsg)
+    jointMsg = navigation_services.genHeadMsg(request.GET["angle0"], request.GET["angle1"])
+    if settings.USE_PEPPER_ROBOT:
+        remote.headPublisher.publish(jointMsg)
     return HttpResponse(status=204)
