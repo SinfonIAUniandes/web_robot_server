@@ -125,11 +125,11 @@ def set_leds(request):
     time.sleep(0.5)
     return HttpResponse(status=204)
 
-def setVolume(request):
+def set_volume(request):
     sSpeech.set_volume_service(int(request.GET["volume"]))
     return HttpResponse(status=204)
 
-def getVolume(request):
+def get_volume(request):
     volume = sSpeech.ros_get_volume_service()
     return HttpResponse(volume)
 
