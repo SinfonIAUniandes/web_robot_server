@@ -2,18 +2,25 @@
   import { useDropZone } from "@vueuse/core";
   import { ref } from "vue";
   import { useDisplayService } from "@/services/displayService.js";
+  import MIcon from "@/components/common/MIcon.vue";
 
-  const {imageUrl, websiteUrl, imageFile, sendImageRequest, sendWebsiteRequest, sendSaveRequest} = useDisplayService();
+  const {imageUrl, websiteUrl, imageFile, sendImageRequest, sendWebsiteRequest, sendSaveRequest, sendLedsRequest} = useDisplayService();
 
   const imageDropZone = ref();
   
   const previewImage = ref();
+
+  const selectedColor = ref('#ffffff');
 
   const displayOnlineImage = () =>{
     const imgElement = previewImage.value;
     imgElement.src = imageUrl.value;
     sendImageRequest();
   }
+
+  const handleColorChange = () => {
+    console.log('Color seleccionado:', selectedColor.value);
+  };
 
   const handleFileChange = (event) => {
     const fileInput = event.target;
@@ -80,7 +87,7 @@
   </div> 
   <br>
   <div class="flex items-center justify-center w-1/2 mx-auto" >
-    <textarea class="rounded-md border border-gray-300 p-2 resize-none h-12 w-full" v-model="imageUrl"></textarea>
+    <textarea class="rounded-md border border-gray-300 p-2 resize-none h-12 w-full" v-model="imageUrl" @keydown.enter.prevent="displayOnlineImage" placeholder="Copy here the link to the image you want to show :-)"></textarea>
   </div>
   <br>
   <div class="flex items-center justify-center w-1/2 mx-auto" >
@@ -98,12 +105,19 @@
   </div> 
   <br>
   <div class="flex items-center justify-center w-1/2 mx-auto" >
-    <textarea class="rounded-md border border-gray-300 p-2 resize-none h-12 w-full" v-model="websiteUrl"></textarea>
+    <textarea class="rounded-md border border-gray-300 p-2 resize-none h-12 w-full" v-model="websiteUrl" @keydown.enter.prevent="sendWebsiteRequest" placeholder="Copy here the link to the webpage you want to show :-)"></textarea>
   </div>
   <br>
   <div class="flex items-center justify-center w-1/2 mx-auto" >
     <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md" @click="sendWebsiteRequest">
       Display
+    </button>
+  </div> 
+  <br>
+  <div class="flex items-center justify-center w-1/2 mx-auto" >
+    <button @click="openColorPicker">
+      <MIcon icon="eye-outline" />
+      <input v-model="selectedColor" @input="handleColorChange" type="color" style="display: none"/>
     </button>
   </div> 
   <br>

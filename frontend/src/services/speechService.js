@@ -17,6 +17,7 @@ export const useSpeechService = () => {
     if (!ready.value) return;
     ready.value = false;
     requestSpeech(text.value, language.value, ready);
+    text.value="";
   }
 
   return {text, language, ready, sendRequest};

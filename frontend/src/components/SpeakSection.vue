@@ -25,7 +25,7 @@
       </select>
     </div>
 
-    <textarea class="rounded-md border border-gray-300 p-2 resize-none h-24" v-model="text"></textarea>
+    <textarea class="rounded-md border border-gray-300 p-2 resize-none h-24" v-model="text" @keydown.enter.prevent="sendRequest" placeholder="Type here what you want Pepper to say :-)"></textarea>
 
     <div class="flex justify-between">
       <button class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md disabled:opacity-50" @click="sendHello">
