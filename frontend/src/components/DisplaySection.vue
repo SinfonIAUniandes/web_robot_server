@@ -1,6 +1,6 @@
 <script setup>
   import { useDropZone } from "@vueuse/core";
-  import { ref } from "vue";
+  import { ref, onMounted } from "vue";
   import { useDisplayService } from "@/services/displayService.js";
   import MIcon from "@/components/common/MIcon.vue";
 
@@ -10,7 +10,15 @@
   
   const previewImage = ref();
 
+  const colorPicker = ref(null);
+
   const selectedColor = ref('#ffffff');
+
+  const textColorClass = ref('');
+
+  const openColorPicker = () => {
+    colorPicker.value.click();
+  };
 
   const displayOnlineImage = () =>{
     const imgElement = previewImage.value;
@@ -19,8 +27,13 @@
   }
 
   const handleColorChange = () => {
+    textColorClass.value = `text-[${selectedColor.value}]`;
     console.log('Color seleccionado:', selectedColor.value);
   };
+
+  onMounted(() => {
+    textColorClass.value = `text-[${selectedColor.value}]`;
+  });
 
   const handleFileChange = (event) => {
     const fileInput = event.target;
@@ -116,8 +129,8 @@
   <br>
   <div class="flex items-center justify-center w-1/2 mx-auto" >
     <button @click="openColorPicker">
-      <MIcon icon="eye-outline" />
-      <input v-model="selectedColor" @input="handleColorChange" type="color" style="display: none"/>
+      <MIcon icon="eye-outline" :class="textColorClass"/>
+      <input ref="colorPicker" v-model="selectedColor" @input="handleColorChange" type="color" style="display: none"/>
     </button>
   </div> 
   <br>
