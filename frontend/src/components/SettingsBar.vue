@@ -1,18 +1,17 @@
 <script setup>
   import BatteryComponent from "@/components/settings/BatteryComponent.vue";
   import VolumeHandler from "@/components/settings/VolumeHandler.vue";
-  import { useConfig } from "@/stores/configStore.js";
-  import { storeToRefs } from "pinia";
   import { ref } from "vue";
   import MIcon from "@/components/common/MIcon.vue";
   import { useAudioService } from "@/services/audioService.js";
-import SpeedHandler from "./settings/SpeedHandler.vue";
+  import SpeedHandler from "./settings/SpeedHandler.vue";
+  import ModalComponent from "@/components/common/ModalComponent.vue";
 
-  const { speed } = storeToRefs(useConfig());
-
-  const {connect, disconnect, isConnected} = useAudioService();
+  const { connect, disconnect, isConnected } = useAudioService();
 
   const menuIsOpen = ref(false);
+
+  const open = ref(true);
 </script>
 
 <template>
@@ -47,7 +46,7 @@ import SpeedHandler from "./settings/SpeedHandler.vue";
         <h1>Settings</h1>
         <span class="hidden lg:flex">:</span>
         <VolumeHandler class="lg:flex hidden" />
-        <SpeedHandler class="lg:flex hidden"/>
+        <SpeedHandler class="lg:flex hidden" />
       </div>
       <div class="font-bold text-xl text-center">SinfonIA</div>
       <div class="flex justify-end">
@@ -55,4 +54,7 @@ import SpeedHandler from "./settings/SpeedHandler.vue";
       </div>
     </div>
   </div>
+  <ModalComponent v-model="open">
+    <div>CONTENIDO AQUÍ</div>
+  </ModalComponent>
 </template>

@@ -12,7 +12,14 @@
 <template>
   <div class="flex items-center gap-1 text-gray-100 text-sm">
     <span class="font-medium">Volume:</span>
-    <input class="mx-1" type="range" :min="VOLUME_RANGE[0]" :max="VOLUME_RANGE[1]" v-model="volume" @change="setVolume" />
+    <input
+      class="mx-1"
+      type="range"
+      :min="VOLUME_RANGE[0]"
+      :max="VOLUME_RANGE[1]"
+      v-model="volume"
+      @change="setVolume"
+    />
     {{ volume }}
   </div>
 </template>
