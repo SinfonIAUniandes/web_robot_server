@@ -24,48 +24,49 @@ class RemoteC:
     def __init__(self):
         # ROS Publishers
         if settings.USE_PEPPER_ROBOT:
-            speech_services.startSpeechMessage()
-            miscellaneous_service.startMiscMessage()
-            navigation_services.startManipulationMessage()
-            perception_services.startPerceptionMessage()
-            sNavigation.startNavigationMessage()
+            speech_services.start_speech_message()
+            miscellaneous_service.start_misc_message()
+            manipulation_services.start_manipulation_message()
+            perception_services.start_perception_message()
+            navigation_services.start_navigation_message()
 
-            self.speechPublisher = rospy.Publisher('/speech', speech_msg, queue_size=10)
-            self.movePublisher = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
-            self.headPublisher = rospy.Publisher('/set_angles', set_angles_msg, queue_size=10)
-            self.animationPublisher = rospy.Publisher('/animations', animation_msg, queue_size=10)
-            self.ledsPublisher = rospy.Publisher('/leds', leds_parameters_msg, queue_size=10)
+            self.speech_publisher = rospy.Publisher('/speech', speech_msg, queue_size=10)
+            self.move_publisher = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
+            self.head_publisher = rospy.Publisher('/set_angles', set_angles_msg, queue_size=10)
+            self.animation_publisher = rospy.Publisher('/animations', animation_msg, queue_size=10)
+            self.leds_publisher = rospy.Publisher('/leds', leds_parameters_msg, queue_size=10)
 
             # ROS Subscribers
             # Suscriber for the robot microphone to get audio
-            self.micSubscriber = rospy.Subscriber("/mic", AudioBuffer, self.audioCallbackSingleChannel)
+            self.mic_subscriber = rospy.Subscriber("/mic", AudioBuffer, self.audio_callback_single_channel)
 
         # Constants
-        self.audioBuffer = ""
+        self.audio_buffer = ""
         self.ended = False
         self.battery = 100
 
-    def audioCallbackSingleChannel(self, data):
+    def audio_callback_single_channel(self, data):
         """
         Callback for the microphone subcriber of the robot
         """
         audio = data.data
         audio = list(audio)
         for i in audio:
-            self.audioBuffer += str(i) + ","
+            self.audio_buffer += str(i) + ","
         self.ended = True
 
-    def gen_message(self, msg):
+    def generate_message(self, msg):
         return '{}'.format(msg)
 
-    def takeAudioBuffer(self):
+    def take_audio_buffer(self):
         while True:
             if self.ended:
-                yield self.gen_message(self.audioBuffer)
-                self.audioBuffer = ""
+                yield self.generate_message(self.audio_buffer)
+                self.audio_buffer = ""
                 self.ended = False
 
-    def mockAudioBuffer(self):
+
+    def mock_audio_buffer(self):
         f = wave.open(settings.MEDIA_ROOT + "/audio/mario.wav")
         yield f.readframes(1000000)
 
@@ -79,23 +80,23 @@ def home(request):
 
 
 def move(request):
-    geometry_msg = sNavigation.aux_mov(request.GET["direction"], request.GET["speed"])
+    geometry_msg = navigation_services.aux_mov(request.GET["direction"], request.GET["speed"])
     if settings.USE_PEPPER_ROBOT:
-        remote.movePublisher.publish(geometry_msg)
+        remote.move_publisher.publish(geometry_msg)
     return HttpResponse(status=204)
 
 
 def joy_stick(request):
-    geometry_msg = sNavigation.aux_joy(request.GET["vertical_axis"], request.GET["horizontal_axis"])
+    geometry_msg = navigation_services.aux_joy(request.GET["vertical_axis"], request.GET["horizontal_axis"])
     if settings.USE_PEPPER_ROBOT:
-        remote.movePublisher.publish(geometry_msg)
+        remote.move_publisher.publish(geometry_msg)
     return HttpResponse(status=204)
 
 
 def speak(request):
-    t2s_msg = speech_services.genMsg(request.GET["language"], request.GET["text"])
+    t2s_msg = speech_services.generate_message(request.GET["language"], request.GET["text"])
     if settings.USE_PEPPER_ROBOT:
-        remote.speechPublisher.publish(t2s_msg)
+        remote.speech_publisher.publish(t2s_msg)
     return HttpResponse(status=204)
 
 
@@ -117,26 +118,29 @@ def save_image(request):
 
 
 def animate(request):
-    anim_msg = navigation_services.genMsg(request.GET["animation"])
+    anim_msg = manipulation_services.generate_message(request.GET["animation"])
     if settings.USE_PEPPER_ROBOT:
-        remote.animationPublisher.publish(anim_msg)
+        remote.animation_publisher.publish(anim_msg)
     return HttpResponse(status=204)
 
 
 def set_leds(request):
-    leds_msg = miscellaneous_service.genMsg(request.GET["red"], request.GET["green"], request.GET["blue"])
+    leds_msg = miscellaneous_service.generate_message(request.GET["red"], request.GET["green"], request.GET["blue"])
     if settings.USE_PEPPER_ROBOT:
-        remote.ledsPublisher.publish(leds_msg)
+        remote.leds_publisher.publish(leds_msg)
     time.sleep(0.5)
     return HttpResponse(status=204)
+
 
 def set_volume(request):
     speech_services.set_volume_service(int(request.GET["volume"]))
     return HttpResponse(status=204)
 
+
 def get_volume(request):
     volume = speech_services.ros_get_volume_service()
     return HttpResponse(volume)
+
 
 def get_battery(request):
     """
@@ -157,9 +161,9 @@ def get_audio(request):
         Returns an answer (string): Indicates if the audio file was created.
     """
     if settings.USE_PEPPER_ROBOT:
-        response = StreamingHttpResponse(remote.takeAudioBuffer(), content_type="text/event-stream", status=200)
+        response = StreamingHttpResponse(remote.take_audio_buffer(), content_type="text/event-stream", status=200)
     else:
-        response = StreamingHttpResponse(remote.mockAudioBuffer(), content_type="text/event-stream", status=200)
+        response = StreamingHttpResponse(remote.mock_audio_buffer(), content_type="text/event-stream", status=200)
 
     response["Cache-Control"] = "no-cache"
     return response
@@ -177,7 +181,7 @@ def delete_images():
 
 def move_head(request):
     # mover cabeza robot
-    jointMsg = navigation_services.genHeadMsg(request.GET["angle0"], request.GET["angle1"])
+    joint_msg = manipulation_services.generate_head_message(request.GET["angle0"], request.GET["angle1"])
     if settings.USE_PEPPER_ROBOT:
-        remote.headPublisher.publish(jointMsg)
+        remote.head_publisher.publish(joint_msg)
     return HttpResponse(status=204)

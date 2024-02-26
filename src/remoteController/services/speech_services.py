@@ -3,7 +3,7 @@ from robot_toolkit_msgs.msg import audio_tools_msg, speech_msg
 from django.conf import settings
 from robot_toolkit_msgs.srv import audio_tools_srv, set_output_volume_srv, battery_service_srv
 
-def startSpeechMessage():
+def start_speech_message():
     #Service speech call
     speechMessage = audio_tools_msg()
     speechMessage.command = "enable_tts"
@@ -42,7 +42,7 @@ def speechToolsService(msg):
     except rospy.ServiceException as e:
         print("Service call failed")
 
-def genMsg(language, text):
+def generate_message(language, text):
     """
     Returns a speech_msg for the robot to say.
     """

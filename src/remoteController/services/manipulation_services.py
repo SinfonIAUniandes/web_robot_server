@@ -2,7 +2,7 @@ import rospy
 from robot_toolkit_msgs.msg import motion_tools_msg, set_angles_msg, animation_msg
 from robot_toolkit_msgs.srv import motion_tools_srv
 
-def startManipulationMessage():
+def start_manipulation_message():
     #Service motion call
     motionMessage = motion_tools_msg()
     motionMessage.command = "enable_all"
@@ -21,13 +21,13 @@ def motionToolsService(msg):
     except rospy.ServiceException as e:
         print("Service call failed")
 
-def genMsg(animation):
+def generate_message(animation):
     anim_msg = animation_msg()
     anim_msg.family = "animations"
     anim_msg.animation_name = animation
     return anim_msg
 
-def genHeadMsg(angle0,angle1):
+def generate_head_message(angle0, angle1):
     jointMsg = set_angles_msg()
     jointMsg.names = ["HeadPitch".encode('ascii'),"HeadYaw".encode('ascii')]
     jointMsg.angles = [float(angle0),float(angle1)]

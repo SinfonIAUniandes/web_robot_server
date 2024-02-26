@@ -3,7 +3,7 @@ from robot_toolkit_msgs.msg import depth_to_laser_msg
 from robot_toolkit_msgs.srv import navigation_tools_srv
 from geometry_msgs.msg import Twist
 
-def startNavigationMessage():
+def start_navigation_message():
     #Service navigation call
     depthToLaserMessage = depth_to_laser_msg()
     depthToLaserMessage.resolution=0

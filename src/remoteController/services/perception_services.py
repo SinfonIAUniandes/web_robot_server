@@ -2,7 +2,7 @@ import rospy
 from robot_toolkit_msgs.msg import vision_tools_msg
 from robot_toolkit_msgs.srv import vision_tools_srv
 
-def startPerceptionMessage():
+def start_perception_message():
     #Service vision calls
     #Start front Camera
     visionMessage = vision_tools_msg()

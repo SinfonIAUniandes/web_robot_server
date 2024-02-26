@@ -7,7 +7,7 @@ from robot_toolkit_msgs.msg import misc_tools_msg, leds_parameters_msg
 from robot_toolkit_msgs.srv import misc_tools_srv, tablet_service_srv, battery_service_srv
 from django.conf import settings
 
-def startMiscMessage():
+def start_misc_message():
     """
     Starts a miscellaneous message service call by enabling all commands.
 
@@ -36,7 +36,7 @@ def miscToolsService(msg):
     except rospy.ServiceException as e:
         print("Service call failed")
 
-def genMsg(red, green, blue):
+def generate_message(red, green, blue):
     leds_msg = leds_parameters_msg()
     leds_msg.name="FaceLeds".encode('ascii')
     leds_msg.red = int(red)
