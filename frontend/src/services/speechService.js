@@ -4,9 +4,8 @@ import { speakUri } from "@/config/endpoints.js";
 export const availableLanguages = ["English", "Spanish"];
 
 const requestSpeech = (text, language, ready) => {
-  fetch(speakUri(text, language))
-    .finally(() => ready.value = true);
-}
+  fetch(speakUri(text, language)).finally(() => (ready.value = true));
+};
 
 export const useSpeechService = () => {
   const text = ref("");
@@ -17,8 +16,8 @@ export const useSpeechService = () => {
     if (!ready.value) return;
     ready.value = false;
     requestSpeech(text.value, language.value, ready);
-    text.value="";
-  }
+    text.value = "";
+  };
 
-  return {text, language, ready, sendRequest};
-}
+  return { text, language, ready, sendRequest };
+};

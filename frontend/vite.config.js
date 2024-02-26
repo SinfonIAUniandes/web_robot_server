@@ -12,6 +12,6 @@ export default defineConfig({
     },
   },
   build: {
-    assetsDir: "static/remoteController/front/assets"
-  }
+    assetsDir: "static/remoteController/front/assets",
+  },
 });

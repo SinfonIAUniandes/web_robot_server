@@ -7,7 +7,7 @@ export const ROBOT_MAXIMUM_SPEED = 0.5;
 
 export const useConfig = defineStore("useConfig", () => {
   const speed = ref(30);
-  const {volume, setVolume} = useVolume();
+  const { volume, setVolume } = useVolume();
 
   watch(speed, (newSpeed) => {
     const speedInRange = newSpeed >= SPEED_RANGE[0] && newSpeed <= SPEED_RANGE[1];

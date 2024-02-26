@@ -11,11 +11,11 @@ export const useDisplay = () => {
     const isMobileDevice = window.innerWidth < 768;
     properties.isMobile = isMobileDevice;
     properties.isDesktop = !isMobileDevice;
-  }
+  };
 
   updateDeviceTypes();
-  
+
   useEventListener(window, "resize", updateDeviceTypes);
 
   return readonly(properties);
-}
+};
