@@ -1,8 +1,8 @@
 <script setup>
-  import { computed } from "vue";
+  import { computed, onMounted, watch } from "vue";
   import { useBattery } from "@/services/batteryService.js";
 
-  const { batteryLevel, loading } = useBattery();
+  const { batteryLevel, loading, ready, init, start } = useBattery();
 
   const color = computed(() =>
     loading.value
@@ -13,6 +13,11 @@
           : "bg-yellow-400"
         : "bg-green-400",
   );
+
+  onMounted(() => init());
+  watch(ready, (value) => {
+    if (value) start();
+  });
 </script>
 
 <template>
